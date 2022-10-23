@@ -9,14 +9,20 @@ import haxepunk.Tween;
 import haxepunk.tweens.misc.*;
 import scenes.*;
 
+// TODO: Maybe car movement but fixed forward momentum?
+
 class Player extends Entity
 {
-    public static inline var SPEED = 100;
+    public static inline var INITIAL_MAX_SPEED = 120;
+    public static inline var FINAL_MAX_SPEED = 170;
+    public static inline var ACCEL = 200;
+    public static inline var TURN_SPEED = 300;
 
     public var hasMoved(default, null):Bool;
     public var isDead(default, null):Bool;
     private var sprite:Image;
-    private var velocity:Vector2;
+    private var angle:Float;
+    private var speed:Float;
 
     public function new(x:Float, y:Float) {
         super(x, y);
@@ -26,7 +32,9 @@ class Player extends Entity
         sprite.x += width / 2;
         sprite.y += height / 2;
         graphic = sprite;
-        velocity = new Vector2();
+        //velocity = new Vector2();
+        angle = 90;
+        speed = 0;
         hasMoved = false;
         isDead = false;
     }
@@ -49,29 +57,36 @@ class Player extends Entity
             return;
         }
 
-        var heading = new Vector2();
         if(Input.check("left")) {
-            heading.x = -1;
+            angle += TURN_SPEED * HXP.elapsed;
         }
-        else if(Input.check("right")) {
-            heading.x = 1;
+        if(Input.check("right")) {
+            angle -= TURN_SPEED * HXP.elapsed;
         }
-        else {
-            heading.x = 0;
-        }
-        if(Input.check("up")) {
-            heading.y = -1;
-        }
-        else if(Input.check("down")) {
-            heading.y = 1;
-        }
-        else {
-            heading.y = 0;
-        }
-        velocity = heading;
-        velocity.normalize(SPEED);
+
+        //if(Input.check("up")) {
+            speed += ACCEL * HXP.elapsed;
+        //}
+        //else if(Input.check("down")) {
+            //speed -= ACCEL * HXP.elapsed;
+        //}
+        //else {
+            //speed = MathUtil.approach(speed, 0, ACCEL * HXP.elapsed);
+        //}
+
+        var maxSpeed = MathUtil.lerp(
+            INITIAL_MAX_SPEED,
+            FINAL_MAX_SPEED,
+            cast(HXP.scene, GameScene).difficultyIncreaser.percent
+        );
+        speed = MathUtil.clamp(speed, -maxSpeed, maxSpeed);
+
+        var velocity = new Vector2();
+        MathUtil.angleXY(velocity, angle, speed);
 
         moveBy(velocity.x * HXP.elapsed, velocity.y * HXP.elapsed);
+
+        sprite.angle = angle;
 
         if(collide("hazard", x, y) != null) {
             die();

@@ -11,10 +11,12 @@ import scenes.*;
 
 class Hazard extends Entity
 {
+    public static inline var SPEED = 100;
+
     public var sprite:Image;
     public var velocity:Vector2;
 
-    public function new(x:Float, y:Float) {
+    public function new(x:Float, y:Float, heading:Vector2) {
         super(x, y);
         type = "hazard";
         mask = new Hitbox(10, 10);
@@ -23,10 +25,12 @@ class Hazard extends Entity
         sprite.x += width / 2;
         sprite.y += height / 2;
         graphic = sprite;
-        velocity = new Vector2();
+        velocity = heading;
+        velocity.normalize(SPEED);
     }
 
     override public function update() {
+        moveBy(velocity.x * HXP.elapsed, velocity.y * HXP.elapsed);
         super.update();
     }
 }

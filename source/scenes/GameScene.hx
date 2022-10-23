@@ -15,10 +15,15 @@ import openfl.Assets;
 
 class GameScene extends Scene
 {
+    public static inline var INITIAL_SPAWN_INTERVAL = 1;
+    public static inline var FINAL_SPAWN_INTERVAL = 0.25;
+    public static inline var TIME_TO_MAX_DIFFICULTY = 60;
+
     public static var totalTime:Float = 0;
     public static var highScore:Float;
 
     public var curtain(default, null):Curtain;
+    public var difficultyIncreaser(default, null):Alarm;
     private var player:Player;
     private var scoreDisplay:Text;
     private var titleDisplay:Text;
@@ -26,6 +31,7 @@ class GameScene extends Scene
     private var replayPrompt:Text;
     private var colorChanger:ColorTween;
     private var canReset:Bool;
+    private var spawner:Alarm;
 
     override public function begin() {
         Data.load(Main.SAVE_FILE_NAME);
@@ -38,8 +44,6 @@ class GameScene extends Scene
         addGraphic(new Image("graphics/background.png"));
 
         player = add(new Player(HXP.width / 2, HXP.height / 2));
-
-        add(new Hazard(HXP.width / 4, HXP.height / 4));
 
         scoreDisplay = new Text("0", 0, 0, 180, 0);
         scoreDisplay.alpha = 0;
@@ -60,6 +64,62 @@ class GameScene extends Scene
         addTween(colorChanger, true);
 
         canReset = false;
+        spawner = new Alarm(INITIAL_SPAWN_INTERVAL, function() {
+            spawnHazard(HXP.choose(false, false, false, true));
+            var resetTo = MathUtil.lerp(
+                INITIAL_SPAWN_INTERVAL,
+                FINAL_SPAWN_INTERVAL,
+                difficultyIncreaser.percent
+            );
+            spawner.reset(resetTo);
+        }, TweenType.Looping);
+        addTween(spawner);
+        difficultyIncreaser = new Alarm(TIME_TO_MAX_DIFFICULTY);
+        addTween(difficultyIncreaser, true);
+    }
+
+    private function spawnHazard(targetPlayer:Bool) {
+        var direction = HXP.choose("top", "bottom", "left", "right");
+        if(direction == "top") {
+            var hazard = new Hazard(0, 0, new Vector2(0, 1));
+            if(targetPlayer) {
+                hazard.moveTo(player.x, -10);
+            }
+            else {
+                hazard.moveTo(Random.random * (HXP.width - 10), -10);
+            }
+            add(hazard);
+        }
+        else if(direction == "bottom") {
+            var hazard = new Hazard(0, 0, new Vector2(0, -1));
+            if(targetPlayer) {
+                hazard.moveTo(player.x, HXP.height);
+            }
+            else {
+                hazard.moveTo(Random.random * (HXP.width - 10), HXP.height);
+            }
+            add(hazard);
+        }
+        else if(direction == "left") {
+            var hazard = new Hazard(0, 0, new Vector2(1, 0));
+            if(targetPlayer) {
+                hazard.moveTo(-10, player.y);
+            }
+            else {
+                hazard.moveTo(-10, Random.random * (HXP.height - 10));
+            }
+            add(hazard);
+        }
+        else if(direction == "right") {
+            var hazard = new Hazard(0, 0, new Vector2(-1, 0));
+            if(targetPlayer) {
+                hazard.moveTo(HXP.width, player.y);
+            }
+            else {
+                hazard.moveTo(HXP.width, Random.random * (HXP.height - 10));
+            }
+            add(hazard);
+        }
     }
 
     override public function update() {
@@ -94,6 +154,7 @@ class GameScene extends Scene
         for(display in [titleDisplay, tutorialDisplay]) {
             HXP.tween(display, {"alpha": 0}, 0.5);
         }
+        spawner.start();
     }
 
     public function onDeath() {
