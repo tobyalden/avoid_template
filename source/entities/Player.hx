@@ -20,6 +20,7 @@ class Player extends Entity
 
     public function new(x:Float, y:Float) {
         super(x, y);
+        name = "player";
         mask = new Hitbox(10, 10);
         sprite = new Image("graphics/player.png");
         sprite.centerOrigin();
@@ -71,7 +72,7 @@ class Player extends Entity
         velocity = heading;
         velocity.normalize(SPEED);
 
-        moveBy(velocity.x * HXP.elapsed, velocity.y * HXP.elapsed);
+        moveBy(velocity.x * HXP.elapsed, velocity.y * HXP.elapsed, "walls");
 
         if(collide("hazard", x, y) != null) {
             die();

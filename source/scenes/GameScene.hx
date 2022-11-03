@@ -40,6 +40,11 @@ class GameScene extends Scene
         player = add(new Player(HXP.width / 2, HXP.height / 2));
 
         add(new Hazard(HXP.width / 4, HXP.height / 4));
+        add(new Hazard(HXP.width / 4 * 3, HXP.height / 4 * 3));
+        add(new Hazard(HXP.width / 4, HXP.height / 4 * 3));
+        add(new Hazard(HXP.width / 4 * 3, HXP.height / 4));
+
+        add(new Level("level"));
 
         scoreDisplay = new Text("0", 0, 0, 180, 0);
         scoreDisplay.alpha = 0;
