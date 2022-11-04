@@ -17,6 +17,8 @@ class Hazard extends Entity
     public var sprite:Image;
     public var velocity:Vector2;
 
+    // TODO: Enemies should all have shared health bar
+
     public function new(x:Float, y:Float) {
         super(x, y);
         type = "hazard";
@@ -39,6 +41,16 @@ class Hazard extends Entity
         velocity.add(towardsPlayer);
         if(velocity.length > MAX_SPEED) {
             velocity.normalize(MAX_SPEED);
+        }
+        if(
+            collidePoint(x, y, player.sword.x, player.sword.y)
+            || collidePoint(x, y, player.centerX + (player.sword.x - player.centerX) / 2, player.centerY + (player.sword.y - player.centerY) / 2)
+        ) {
+            sprite.color = 0x000000;
+            HXP.scene.remove(this);
+        }
+        else {
+            sprite.color = 0xFFFFFF;
         }
         moveBy(velocity.x * HXP.elapsed, velocity.y * HXP.elapsed, ["walls", "hazard"]);
         super.update();

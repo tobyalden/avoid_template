@@ -30,6 +30,7 @@ class Main extends Engine
         Key.define("down", [Key.S, Key.DOWN]);
         Key.define("left", [Key.A, Key.LEFT]);
         Key.define("right", [Key.D, Key.RIGHT]);
+        Key.define("lock", [Key.Z]);
         Key.define("reset", [Key.W, Key.UP, Key.SPACE, Key.ENTER]);
 
         if(Gamepad.gamepad(0) != null) {
