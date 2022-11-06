@@ -21,6 +21,7 @@ class Player extends Entity
     private var sprite:Image;
     private var velocity:Vector2;
     private var lockPosition:Vector2;
+    private var rotatingClockwise:Bool;
 
     public function new(x:Float, y:Float) {
         super(x, y);
@@ -36,6 +37,7 @@ class Player extends Entity
         isDead = false;
         sword = new Vector2(centerX, centerY - SWORD_LENGTH);
         lockPosition = new Vector2();
+        rotatingClockwise = false;
     }
 
     override public function update() {
@@ -92,7 +94,10 @@ class Player extends Entity
         var towardsSword = new Vector2(centerX - sword.x, centerY - sword.y);
         if(Input.pressed("lock")) {
             lockPosition = towardsSword;
+            rotatingClockwise = !rotatingClockwise;
         }
+        towardsSword.rotate(HXP.elapsed * 4 * (rotatingClockwise ? -1: 1));
+        // lock and rotation could be separate powerups
         if(Input.check("lock")) {
             sword.x = centerX - lockPosition.x;
             sword.y = centerY - lockPosition.y;
