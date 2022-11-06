@@ -15,6 +15,8 @@ import openfl.Assets;
 
 class GameScene extends Scene
 {
+    public static inline var TIME_TILL_SWORD_DROP = 20;
+
     public static var totalTime:Float = 0;
     public static var highScore:Float;
 
@@ -37,19 +39,19 @@ class GameScene extends Scene
 
         addGraphic(new Image("graphics/background.png"));
 
-        player = add(new Player(HXP.width / 2, HXP.height / 2));
-
-        add(new Hazard(HXP.width / 4, HXP.height / 4));
-        add(new Hazard(HXP.width / 4 * 3, HXP.height / 4 * 3));
-        add(new Hazard(HXP.width / 4, HXP.height / 4 * 3));
-        add(new Hazard(HXP.width / 4 * 3, HXP.height / 4));
-
-        add(new Level("level"));
+        var level = new Level("level");
+        for(entity in level.entities) {
+            if(entity.name == "player") {
+                player = cast(entity, Player);
+            }
+            add(entity);
+        }
+        add(level);
 
         scoreDisplay = new Text("0", 0, 0, 180, 0);
         scoreDisplay.alpha = 0;
-        titleDisplay = new Text("TITLE", 0, 58, 180, 0, {align: TextAlignType.CENTER});
-        tutorialDisplay = new Text("explain controls here", 0, 103, 180, 0, {align: TextAlignType.CENTER, size: 12});
+        titleDisplay = new Text("THROWN IN THE PIT", 0, 58, 180, 0, {align: TextAlignType.CENTER});
+        tutorialDisplay = new Text("arrow keys move", 0, 103, 180, 0, {align: TextAlignType.CENTER, size: 12});
         for(display in [scoreDisplay, titleDisplay, tutorialDisplay]) {
             addGraphic(display);
         }
@@ -99,6 +101,9 @@ class GameScene extends Scene
         for(display in [titleDisplay, tutorialDisplay]) {
             HXP.tween(display, {"alpha": 0}, 0.5);
         }
+        HXP.alarm(TIME_TILL_SWORD_DROP, function() {
+            cast(getInstance("sword"), Sword).dropIn();
+        }, TweenType.OneShot, this);
     }
 
     public function onDeath() {

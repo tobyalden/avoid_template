@@ -46,6 +46,12 @@ class Level extends Entity
                     if(entity.name == "player") {
                         entities.push(new Player(entity.x, entity.y));
                     }
+                    else if(entity.name == "hazard") {
+                        entities.push(new Hazard(entity.x, entity.y));
+                    }
+                    else if(entity.name == "sword") {
+                        entities.push(new Sword(entity.x, entity.y));
+                    }
                 }
             }
         }

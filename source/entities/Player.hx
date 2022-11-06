@@ -18,6 +18,7 @@ class Player extends Entity
     public var hasMoved(default, null):Bool;
     public var isDead(default, null):Bool;
     public var sword(default, null):Vector2;
+    public var hasSword(default, null):Bool;
     private var sprite:Image;
     private var velocity:Vector2;
     private var lockPosition:Vector2;
@@ -38,6 +39,7 @@ class Player extends Entity
         sword = new Vector2(centerX, centerY - SWORD_LENGTH);
         lockPosition = new Vector2();
         rotatingClockwise = false;
+        hasSword = false;
     }
 
     override public function update() {
@@ -86,8 +88,16 @@ class Player extends Entity
         if(collide("hazard", x, y) != null) {
             die();
         }
+        if(collide("sword", x, y) != null) {
+            HXP.scene.remove(HXP.scene.getInstance("sword"));
+            getSword();
+        }
 
         super.update();
+    }
+
+    private function getSword() {
+        hasSword = true;
     }
 
     public function updateSword() {
@@ -148,10 +158,11 @@ class Player extends Entity
     }
 
     override public function render(camera:Camera) {
-        // Draw sword
-        // TODO: Sword trails behind you, but can be locked to a facing
         super.render(camera);
-        Draw.lineThickness = 3;
-        Draw.line(centerX, centerY, sword.x, sword.y);
+        if(hasSword) {
+            // Draw sword
+            Draw.lineThickness = 3;
+            Draw.line(centerX, centerY, sword.x, sword.y);
+        }
     }
 }
