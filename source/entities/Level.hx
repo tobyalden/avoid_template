@@ -13,10 +13,18 @@ class Level extends Entity
     private var tiles:Tilemap;
     public var entities(default, null):Array<Entity>;
 
-    public function new(levelName:String) {
+    static public function exists(levelX:Int, levelY:Int) {
+        return Assets.exists(Level.getLevelPath(levelX, levelY));
+    }
+
+    static public function getLevelPath(levelX:Int, levelY:Int) {
+        return 'levels/${levelX}x${levelY}.json';
+    }
+
+    public function new(levelX:Int, levelY:Int) {
         super(0, 0);
         type = "walls";
-        loadLevel(levelName);
+        loadLevel(Level.getLevelPath(levelX, levelY));
         updateGraphic();
         mask = walls;
     }
@@ -25,8 +33,8 @@ class Level extends Entity
         super.update();
     }
 
-    private function loadLevel(levelName:String) {
-        var levelData = haxe.Json.parse(Assets.getText('levels/${levelName}.json'));
+    private function loadLevel(levelPath:String) {
+        var levelData = haxe.Json.parse(Assets.getText(levelPath));
         for(layerIndex in 0...levelData.layers.length) {
             var layer = levelData.layers[layerIndex];
             if(layer.name == "walls") {

@@ -13,9 +13,17 @@ import haxepunk.tweens.misc.*;
 import haxepunk.utils.*;
 import openfl.Assets;
 
+@:structInit class MapCoordinates {
+    public var mapX:Int;
+    public var mapY:Int;
+}
+
 class GameScene extends Scene
 {
-    public static inline var TIME_TILL_SWORD_DROP = 20;
+    public static inline var GAME_WIDTH = 180;
+    public static inline var GAME_HEIGHT = 180;
+
+    public static inline var TIME_TILL_SWORD_DROP = 10;
 
     public static var totalTime:Float = 0;
     public static var highScore:Float;
@@ -28,6 +36,8 @@ class GameScene extends Scene
     private var replayPrompt:Text;
     private var colorChanger:ColorTween;
     private var canReset:Bool;
+    private var previousCoordinates:MapCoordinates;
+    private var currentLevel:Level;
 
     override public function begin() {
         Data.load(Main.SAVE_FILE_NAME);
@@ -39,14 +49,7 @@ class GameScene extends Scene
 
         addGraphic(new Image("graphics/background.png"));
 
-        var level = new Level("level");
-        for(entity in level.entities) {
-            if(entity.name == "player") {
-                player = cast(entity, Player);
-            }
-            add(entity);
-        }
-        add(level);
+        currentLevel = loadLevel(0, 0);
 
         scoreDisplay = new Text("0", 0, 0, 180, 0);
         scoreDisplay.alpha = 0;
@@ -67,6 +70,7 @@ class GameScene extends Scene
         addTween(colorChanger, true);
 
         canReset = false;
+        previousCoordinates = getCurrentCoordinates();
     }
 
     override public function update() {
@@ -94,6 +98,54 @@ class GameScene extends Scene
         }
 
         super.update();
+
+        var currentCoordinates = getCurrentCoordinates();
+        camera.x = currentCoordinates.mapX * GAME_WIDTH;
+        camera.y = currentCoordinates.mapY * GAME_HEIGHT;
+        if(
+            currentCoordinates.mapX != previousCoordinates.mapX
+            || currentCoordinates.mapY != previousCoordinates.mapY
+        ) {
+            if(Level.exists(currentCoordinates.mapX, currentCoordinates.mapY)) {
+                unloadCurrentLevel();
+                currentLevel = loadLevel(currentCoordinates.mapX, currentCoordinates.mapY);
+            }
+        }
+        previousCoordinates = currentCoordinates;
+    }
+
+    public function getCurrentCoordinates():MapCoordinates {
+        return {
+            mapX: Std.int(MathUtil.floor(player.centerX / GAME_WIDTH)),
+            mapY: Std.int(MathUtil.floor(player.centerY / GAME_HEIGHT))
+        }
+    }
+
+    public function unloadCurrentLevel() {
+        for(entity in currentLevel.entities) {
+            if(entity.name == "player") {
+                continue;
+            }
+            remove(entity);
+        }
+        remove(currentLevel);
+    }
+
+    public function loadLevel(levelX:Int, levelY:Int) {
+        var level = new Level(levelX, levelY);
+        for(entity in level.entities) {
+            if(entity.name == "player") {
+                if(player == null) {
+                    player = cast(entity, Player);
+                }
+                else {
+                    continue;
+                }
+            }
+            add(entity);
+        }
+        add(level);
+        return level;
     }
 
     public function onStart() {
