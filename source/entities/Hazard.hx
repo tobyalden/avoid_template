@@ -7,6 +7,7 @@ import haxepunk.masks.*;
 import haxepunk.math.*;
 import haxepunk.Tween;
 import haxepunk.tweens.misc.*;
+import haxepunk.utils.*;
 import scenes.*;
 
 class Hazard extends Entity
@@ -16,6 +17,9 @@ class Hazard extends Entity
 
     public var sprite:Image;
     public var velocity:Vector2;
+    private var phase:Int;
+    private var start:Vector2;
+    private var phaseTweener:MultiVarTween;
 
     public function new(x:Float, y:Float) {
         super(x, y);
@@ -27,6 +31,13 @@ class Hazard extends Entity
         sprite.y += height / 2;
         graphic = sprite;
         velocity = new Vector2();
+        phase = 1;
+        start = new Vector2(x, y);
+        phaseTweener = new MultiVarTween();
+        phaseTweener.onComplete.bind(function() {
+            advancePhase();
+        });
+        addTween(phaseTweener);
     }
 
     override public function update() {
@@ -34,14 +45,31 @@ class Hazard extends Entity
         if(!player.hasMoved) {
             return;
         }
-        var towardsPlayer = new Vector2(player.centerX - centerX, player.centerY - centerY);
-        towardsPlayer.normalize(ACCEL * HXP.elapsed);
-        velocity.add(towardsPlayer);
-        if(velocity.length > MAX_SPEED) {
-            velocity.normalize(MAX_SPEED);
+        if(phase == 1) {
+            var towardsPlayer = new Vector2(player.centerX - centerX, player.centerY - centerY);
+            towardsPlayer.normalize(ACCEL * HXP.elapsed);
+            velocity.add(towardsPlayer);
+            if(velocity.length > MAX_SPEED) {
+                velocity.normalize(MAX_SPEED);
+            }
+            moveBy(velocity.x * HXP.elapsed, velocity.y * HXP.elapsed, ["hazard", "walls"]);
         }
-        moveBy(velocity.x * HXP.elapsed, velocity.y * HXP.elapsed, ["walls", "hazard"]);
+        else if(phase == 2) {
+            if(!phaseTweener.active) {
+                phaseTweener.tween(velocity, {x: 0, y: 0}, 2, Ease.sineInOut);
+            }
+            moveBy(velocity.x * HXP.elapsed, velocity.y * HXP.elapsed, ["hazard", "walls"]);
+        }
+        else if(phase == 3) {
+            if(!phaseTweener.active) {
+                phaseTweener.tween(this, {x: start.x, y: start.y}, 2, Ease.sineInOut);
+            }
+        }
         super.update();
+    }
+
+    public function advancePhase() {
+        phase += 1;
     }
 
     override public function moveCollideX(e:Entity) {
