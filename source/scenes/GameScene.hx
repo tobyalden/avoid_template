@@ -19,14 +19,14 @@ class GameScene extends Scene
     public static var highScore:Float;
 
     public var curtain(default, null):Curtain;
-    private var player:Player;
+    public var hazards(default, null):Array<Hazard>;
+    public var player(default, null):Player;
     private var scoreDisplay:Text;
     private var titleDisplay:Text;
     private var tutorialDisplay:Text;
     private var replayPrompt:Text;
     private var colorChanger:ColorTween;
     private var canReset:Bool;
-    private var hazards:Array<Hazard>;
 
     override public function begin() {
         Data.load(Main.SAVE_FILE_NAME);
@@ -41,10 +41,10 @@ class GameScene extends Scene
         player = add(new Player(HXP.width / 2, HXP.height / 2));
 
         hazards = [
-            new Hazard(HXP.width / 4, HXP.height / 4),
-            new Hazard(HXP.width / 4 * 3, HXP.height / 4 * 3),
-            new Hazard(HXP.width / 4, HXP.height / 4 * 3),
-            new Hazard(HXP.width / 4 * 3, HXP.height / 4)
+            new Hazard(HXP.width / 4, HXP.height / 4, 1),
+            new Hazard(HXP.width / 4 * 3, HXP.height / 4 * 3, 2),
+            new Hazard(HXP.width / 4, HXP.height / 4 * 3, 3),
+            new Hazard(HXP.width / 4 * 3, HXP.height / 4, 4)
         ];
         for(hazard in hazards) {
             add(hazard);
@@ -104,15 +104,6 @@ class GameScene extends Scene
         HXP.tween(scoreDisplay, {"alpha": highScore > 0 ? 0.5 : 1}, 0.5);
         for(display in [titleDisplay, tutorialDisplay]) {
             HXP.tween(display, {"alpha": 0}, 0.5);
-        }
-        HXP.alarm(2, function() {
-            startPhaseTwo();
-        }, TweenType.OneShot, this);
-    }
-
-    private function startPhaseTwo() {
-        for(hazard in hazards) {
-            hazard.advancePhase();
         }
     }
 
