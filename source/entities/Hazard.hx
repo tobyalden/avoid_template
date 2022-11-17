@@ -29,17 +29,18 @@ class Hazard extends Entity
         super(x, y);
         this.number = number;
         type = "hazard";
-        mask = new Hitbox(10, 10);
+        var hitbox = new Hitbox(10, 10);
+        hitbox.x = -5;
+        hitbox.y = -5;
+        mask = hitbox;
         sprite = new Spritemap("graphics/hazard.png", 10, 10);
         sprite.add("idle", [0]);
         sprite.add("tell", [1]);
         sprite.play("idle");
         sprite.centerOrigin();
-        sprite.x += width / 2;
-        sprite.y += height / 2;
         graphic = sprite;
         velocity = new Vector2();
-        phase = 4;
+        phase = 8;
         start = new Vector2(x, y);
         phaseTweener = new MultiVarTween();
         phaseTweener.onComplete.bind(function() {
@@ -81,15 +82,10 @@ class Hazard extends Entity
             }
         }
         else if(phase == 4) {
-            if(!phaseTweener.active) {
-                phaseTweener.tween(this, {x: start.x, y: start.y}, 2, Ease.sineInOut);
-            }
-        }
-        else if(phase == 5) {
             velocity.normalize((1 - lungeCooldown.percent) * MAX_LUNGE_SPEED);
             moveBy(velocity.x * HXP.elapsed, velocity.y * HXP.elapsed, ["hazard", "walls"]);
         }
-        else if(phase == 6) {
+        else if(phase == 5) {
             var allReady = true;
             for(hazard in cast(HXP.scene, GameScene).hazards) {
                 if(hazard.phase != 6) {
@@ -106,6 +102,50 @@ class Hazard extends Entity
         else if(phase == 7) {
             velocity.normalize((1 - lungeCooldown.percent) * MAX_LUNGE_SPEED);
             moveBy(velocity.x * HXP.elapsed, velocity.y * HXP.elapsed, ["hazard", "walls"]);
+        }
+        else if(phase == 8) {
+            if(!phaseTweener.active) {
+                var topX = HXP.width / 8 + (HXP.width - HXP.width / 4) * [0, 0.33, 0.66, 1][number];
+                phaseTweener.tween(this, {x: topX, y: HXP.height / 8}, 2, Ease.sineInOut);
+            }
+        }
+        else if(phase == 9) {
+            if(!phaseTweener.active) {
+                phaseTweener.tween(this, {y: HXP.height / 8 * 7}, 1, Ease.sineInOut);
+            }
+        }
+        else if(phase == 10) {
+            if(!phaseTweener.active) {
+                var leftY = HXP.height / 8 + (HXP.height - HXP.height / 4) * [0, 0.33, 0.66, 1][number];
+                phaseTweener.tween(this, {x: HXP.width / 8, y: leftY}, 1, Ease.sineInOut);
+            }
+        }
+        else if(phase == 11) {
+            if(!phaseTweener.active) {
+                phaseTweener.tween(this, {x: HXP.width / 8 * 7}, 0.66, Ease.sineInOut);
+            }
+        }
+        else if(phase == 12) {
+            if(!phaseTweener.active) {
+                var bottomX = HXP.width / 8 + (HXP.width - HXP.width / 4) * [0, 0.33, 0.66, 1][number];
+                phaseTweener.tween(this, {x: bottomX, y: HXP.height / 8 * 7}, 0.75, Ease.sineInOut);
+            }
+        }
+        else if(phase == 13) {
+            if(!phaseTweener.active) {
+                phaseTweener.tween(this, {y: HXP.height / 8}, 0.5, Ease.sineInOut);
+            }
+        }
+        else if(phase == 14) {
+            if(!phaseTweener.active) {
+                var rightY = HXP.height / 8 + (HXP.height - HXP.height / 4) * [0, 0.33, 0.66, 1][number];
+                phaseTweener.tween(this, {x: HXP.width / 8 * 7, y: rightY}, 0.5, Ease.sineInOut);
+            }
+        }
+        else if(phase == 15) {
+            if(!phaseTweener.active) {
+                phaseTweener.tween(this, {x: HXP.width / 8}, 0.33, Ease.sineInOut);
+            }
         }
         super.update();
     }
