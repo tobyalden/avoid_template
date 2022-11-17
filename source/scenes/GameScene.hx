@@ -99,7 +99,7 @@ class GameScene extends Scene
                 scoreDisplay.alpha = 1;
                 Main.sfx["bell"].play(0.75);
             }
-            scoreDisplay.text = '${timeRound(totalTime, 0)}';
+            scoreDisplay.text = 'Ph${hazards[0].phase} - ${timeRound(totalTime, 0)}';
             scoreDisplay.x = HXP.width / 2 - scoreDisplay.textWidth / 2;
         }
 

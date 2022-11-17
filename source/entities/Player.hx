@@ -75,9 +75,11 @@ class Player extends Entity
 
         moveBy(velocity.x * HXP.elapsed, velocity.y * HXP.elapsed, "walls");
 
-        if(collide("hazard", x, y) != null) {
+        if(collide("hazard", x, y) != null && ! Input.check("cheat")) {
             die();
         }
+
+        sprite.alpha = Input.check("cheat") ? 0.5 : 1;
 
         super.update();
     }

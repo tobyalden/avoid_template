@@ -10,6 +10,8 @@ import haxepunk.tweens.misc.*;
 import haxepunk.utils.*;
 import scenes.*;
 
+// Add in new phases for new game+
+
 class Hazard extends Entity
 {
     public static inline var MAX_CHASE_SPEED = 100;
@@ -24,6 +26,7 @@ class Hazard extends Entity
     private var phaseTweener:MultiVarTween;
     private var lungeCooldown:Alarm;
     private var number:Int;
+    private var phaseAge:Int;
 
     public function new(x:Float, y:Float, number:Int) {
         super(x, y);
@@ -40,15 +43,21 @@ class Hazard extends Entity
         sprite.centerOrigin();
         graphic = sprite;
         velocity = new Vector2();
-        phase = 8;
+        phase = 0;
         start = new Vector2(x, y);
         phaseTweener = new MultiVarTween();
         phaseTweener.onComplete.bind(function() {
             advancePhase();
+            trace('advancing from phase tweenter');
         });
         addTween(phaseTweener);
-        lungeCooldown = new Alarm(LUNGE_COOLDOWN);
+        lungeCooldown = new Alarm(LUNGE_COOLDOWN, TweenType.Persist);
+        lungeCooldown.onComplete.bind(function() {
+            trace('advancing from lunge');
+            advancePhase();
+        });
         addTween(lungeCooldown);
+        phaseAge = 0;
     }
 
     private function getVectorTowards(entity:Entity) {
@@ -57,11 +66,19 @@ class Hazard extends Entity
     }
 
     override public function update() {
+        //trace('phase at start: ${phase}');
         if(!getPlayer().hasMoved) {
             return;
         }
+        if(phase == 0) {
+            advancePhase();
+        }
         if(phase == 1) {
-            // TODO: advance phase
+            if(phaseAge == 0) {
+                HXP.alarm(1, function() {
+                    advancePhase();
+                }, this);
+            }
             var towardsPlayer = getVectorTowards(getPlayer());
             towardsPlayer.normalize(ACCEL * HXP.elapsed);
             velocity.add(towardsPlayer);
@@ -71,92 +88,98 @@ class Hazard extends Entity
             moveBy(velocity.x * HXP.elapsed, velocity.y * HXP.elapsed, ["hazard", "walls"]);
         }
         else if(phase == 2) {
-            if(!phaseTweener.active) {
+            if(phaseAge == 0) {
                 phaseTweener.tween(velocity, {x: 0, y: 0}, 2, Ease.sineInOut);
             }
             moveBy(velocity.x * HXP.elapsed, velocity.y * HXP.elapsed, ["hazard", "walls"]);
         }
         else if(phase == 3) {
-            if(!phaseTweener.active) {
+            if(phaseAge == 0) {
                 phaseTweener.tween(this, {x: start.x, y: start.y}, 2, Ease.sineInOut);
             }
         }
         else if(phase == 4) {
+            if(phaseAge == 0) {
+                // Stagger lunges
+                HXP.alarm(number * 1.5, function() {
+                    lunge();
+                }, this);
+            }
             velocity.normalize((1 - lungeCooldown.percent) * MAX_LUNGE_SPEED);
             moveBy(velocity.x * HXP.elapsed, velocity.y * HXP.elapsed, ["hazard", "walls"]);
         }
         else if(phase == 5) {
             var allReady = true;
             for(hazard in cast(HXP.scene, GameScene).hazards) {
-                if(hazard.phase != 6) {
+                if(hazard.phase != 5) {
                     allReady = false;
                 }
             }
-            if(allReady) {
+            if(allReady && number == 1) {
                 for(hazard in cast(HXP.scene, GameScene).hazards) {
-                    hazard.lunge();
                     hazard.advancePhase();
+                    trace('advancing manually');
+                    hazard.lunge();
                 }
             }
         }
-        else if(phase == 7) {
+        else if(phase == 6) {
             velocity.normalize((1 - lungeCooldown.percent) * MAX_LUNGE_SPEED);
             moveBy(velocity.x * HXP.elapsed, velocity.y * HXP.elapsed, ["hazard", "walls"]);
         }
-        else if(phase == 8) {
-            if(!phaseTweener.active) {
+        else if(phase == 7) {
+            if(phaseAge == 0) {
                 var topX = HXP.width / 8 + (HXP.width - HXP.width / 4) * [0, 0.33, 0.66, 1][number];
                 phaseTweener.tween(this, {x: topX, y: HXP.height / 8}, 2, Ease.sineInOut);
             }
         }
-        else if(phase == 9) {
-            if(!phaseTweener.active) {
+        else if(phase == 8) {
+            if(phaseAge == 0) {
                 phaseTweener.tween(this, {y: HXP.height / 8 * 7}, 1, Ease.sineInOut);
             }
         }
-        else if(phase == 10) {
-            if(!phaseTweener.active) {
+        else if(phase == 9) {
+            if(phaseAge == 0) {
                 var leftY = HXP.height / 8 + (HXP.height - HXP.height / 4) * [0, 0.33, 0.66, 1][number];
                 phaseTweener.tween(this, {x: HXP.width / 8, y: leftY}, 1, Ease.sineInOut);
             }
         }
-        else if(phase == 11) {
-            if(!phaseTweener.active) {
+        else if(phase == 10) {
+            if(phaseAge == 0) {
                 phaseTweener.tween(this, {x: HXP.width / 8 * 7}, 0.66, Ease.sineInOut);
             }
         }
-        else if(phase == 12) {
-            if(!phaseTweener.active) {
+        else if(phase == 11) {
+            if(phaseAge == 0) {
                 var bottomX = HXP.width / 8 + (HXP.width - HXP.width / 4) * [0, 0.33, 0.66, 1][number];
                 phaseTweener.tween(this, {x: bottomX, y: HXP.height / 8 * 7}, 0.75, Ease.sineInOut);
             }
         }
-        else if(phase == 13) {
-            if(!phaseTweener.active) {
+        else if(phase == 12) {
+            if(phaseAge == 0) {
                 phaseTweener.tween(this, {y: HXP.height / 8}, 0.5, Ease.sineInOut);
             }
         }
-        else if(phase == 14) {
-            if(!phaseTweener.active) {
+        else if(phase == 13) {
+            if(phaseAge == 0) {
                 var rightY = HXP.height / 8 + (HXP.height - HXP.height / 4) * [0, 0.33, 0.66, 1][number];
                 phaseTweener.tween(this, {x: HXP.width / 8 * 7, y: rightY}, 0.5, Ease.sineInOut);
             }
         }
-        else if(phase == 15) {
-            if(!phaseTweener.active) {
+        else if(phase == 14) {
+            if(phaseAge == 0) {
                 phaseTweener.tween(this, {x: HXP.width / 8}, 0.33, Ease.sineInOut);
             }
         }
         super.update();
+        phaseAge += 1;
+        //trace('phase at end: ${phase}\n');
     }
 
     public function advancePhase() {
+        trace('BOOP');
         phase += 1;
-        if(phase == 5) {
-            HXP.alarm(number * 1.5, function() {
-                lunge();
-            }, this);
-        }
+        phaseAge = 0;
     }
 
     private function lunge() {
@@ -165,9 +188,6 @@ class Hazard extends Entity
             sprite.play("idle");
             var towardsPlayer = getVectorTowards(getPlayer());
             velocity = towardsPlayer;
-            lungeCooldown.onComplete.bind(function() {
-                advancePhase();
-            });
             lungeCooldown.start();
         }, this);
     }
