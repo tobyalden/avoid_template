@@ -52,10 +52,16 @@ class GameScene extends Scene
 
         add(new Level("level"));
 
-        scoreDisplay = new Text("0", 0, 0, 180, 0);
+        scoreDisplay = new Text("0", 0, 0, HXP.width, 0);
         scoreDisplay.alpha = 0;
-        titleDisplay = new Text("TITLE", 0, 58, 180, 0, {align: TextAlignType.CENTER});
-        tutorialDisplay = new Text("explain controls here", 0, 103, 180, 0, {align: TextAlignType.CENTER, size: 12});
+        titleDisplay = new Text("OWIWO");
+        titleDisplay.centerOrigin();
+        titleDisplay.x = HXP.width / 2 - 3; // idk why but you need a 3 pixel offset to get it truly centered
+        titleDisplay.y = HXP.height / 2 - 25;
+        tutorialDisplay = new Text("arrow keys\nor WASD\nto move", {size: 12});
+        tutorialDisplay.centerOrigin();
+        tutorialDisplay.x = HXP.width / 2 - 3; // idk why but you need a 3 pixel offset to get it truly centered
+        tutorialDisplay.y = HXP.height / 2 + 25;
         for(display in [scoreDisplay, titleDisplay, tutorialDisplay]) {
             addGraphic(display);
         }

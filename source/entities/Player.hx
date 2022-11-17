@@ -21,11 +21,12 @@ class Player extends Entity
     public function new(x:Float, y:Float) {
         super(x, y);
         name = "player";
-        mask = new Hitbox(10, 10);
+        var hitbox = new Hitbox(10, 10);
+        hitbox.x = -5;
+        hitbox.y = -5;
+        mask = hitbox;
         sprite = new Image("graphics/player.png");
         sprite.centerOrigin();
-        sprite.x += width / 2;
-        sprite.y += height / 2;
         graphic = sprite;
         velocity = new Vector2();
         hasMoved = false;
