@@ -75,7 +75,7 @@ class Hazard extends Entity
         }
         if(phase == 1) {
             if(phaseAge == 0) {
-                HXP.alarm(1, function() {
+                HXP.alarm(8, function() {
                     advancePhase();
                 }, this);
             }
@@ -85,13 +85,13 @@ class Hazard extends Entity
             if(velocity.length > MAX_CHASE_SPEED) {
                 velocity.normalize(MAX_CHASE_SPEED);
             }
-            moveBy(velocity.x * HXP.elapsed, velocity.y * HXP.elapsed, ["hazard", "walls"]);
+            moveBy(velocity.x * HXP.elapsed, velocity.y * HXP.elapsed, ["hazard", "walls", "door"]);
         }
         else if(phase == 2) {
             if(phaseAge == 0) {
                 phaseTweener.tween(velocity, {x: 0, y: 0}, 2, Ease.sineInOut);
             }
-            moveBy(velocity.x * HXP.elapsed, velocity.y * HXP.elapsed, ["hazard", "walls"]);
+            moveBy(velocity.x * HXP.elapsed, velocity.y * HXP.elapsed, ["hazard", "walls", "door"]);
         }
         else if(phase == 3) {
             if(phaseAge == 0) {

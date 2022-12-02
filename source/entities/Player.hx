@@ -78,6 +78,13 @@ class Player extends Entity
         if(collide("hazard", x, y) != null && ! Input.check("cheat")) {
             die();
         }
+        var _door = collide("door", x, y);
+        if(_door != null) {
+            var door = cast(_door, Door);
+            if(door.isOpen) {
+                cast(HXP.scene, GameScene).useDoor(door);
+            }
+        }
 
         sprite.alpha = Input.check("cheat") ? 0.5 : 1;
 

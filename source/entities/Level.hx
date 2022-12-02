@@ -41,10 +41,18 @@ class Level extends Entity
             else if(layer.name == "entities") {
                 // Load entities
                 entities = new Array<Entity>();
+                var hazardCount = 1;
                 for(entityIndex in 0...layer.entities.length) {
                     var entity = layer.entities[entityIndex];
                     if(entity.name == "player") {
                         entities.push(new Player(entity.x, entity.y));
+                    }
+                    if(entity.name == "hazard") {
+                        entities.push(new Hazard(entity.x, entity.y, hazardCount));
+                        hazardCount++;
+                    }
+                    if(entity.name == "door") {
+                        entities.push(new Door(entity.x, entity.y, entity.width, entity.height, entity.values.destination));
                     }
                 }
             }

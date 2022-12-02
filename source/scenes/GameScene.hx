@@ -27,6 +27,7 @@ class GameScene extends Scene
     private var replayPrompt:Text;
     private var colorChanger:ColorTween;
     private var canReset:Bool;
+    private var level:Level;
 
     override public function begin() {
         Data.load(Main.SAVE_FILE_NAME);
@@ -38,19 +39,28 @@ class GameScene extends Scene
 
         addGraphic(new Image("graphics/background.png"));
 
-        player = add(new Player(HXP.width / 2, HXP.height / 2));
+        //player = add(new Player(HXP.width / 2, HXP.height / 2));
 
-        hazards = [
-            new Hazard(HXP.width / 4, HXP.height / 4, 1),
-            new Hazard(HXP.width / 4 * 3, HXP.height / 4 * 3, 2),
-            new Hazard(HXP.width / 4, HXP.height / 4 * 3, 3),
-            new Hazard(HXP.width / 4 * 3, HXP.height / 4, 4)
-        ];
-        for(hazard in hazards) {
-            add(hazard);
+            //new Hazard(HXP.width / 4, HXP.height / 4, 1),
+            //new Hazard(HXP.width / 4 * 3, HXP.height / 4 * 3, 2),
+            //new Hazard(HXP.width / 4, HXP.height / 4 * 3, 3),
+            //new Hazard(HXP.width / 4 * 3, HXP.height / 4, 4)
+        //];
+        //for(hazard in hazards) {
+            //add(hazard);
+        //}
+
+        hazards = [];
+        level = add(new Level("level"));
+        for(entity in level.entities) {
+            if(entity.name == "player") {
+                player = cast(entity, Player);
+            }
+            if(entity.type == "hazard") {
+                hazards.push(cast(entity, Hazard));
+            }
+            add(entity);
         }
-
-        add(new Level("level"));
 
         scoreDisplay = new Text("0", 0, 0, HXP.width, 0);
         scoreDisplay.alpha = 0;
@@ -106,11 +116,28 @@ class GameScene extends Scene
         super.update();
     }
 
+    public function useDoor(door:Door) {
+        pause();
+        curtain.fadeIn(2);
+        HXP.alarm(2, function() {
+            HXP.scene = new GameScene();
+        });
+    }
+
+    private function pause() {
+        for(entity in level.entities) {
+            entity.active = false;
+        }
+    }
+
     public function onStart() {
         HXP.tween(scoreDisplay, {"alpha": highScore > 0 ? 0.5 : 1}, 0.5);
         for(display in [titleDisplay, tutorialDisplay]) {
             HXP.tween(display, {"alpha": 0}, 0.5);
         }
+        HXP.alarm(33, function() {
+            cast(getInstance("door"), Door).open();
+        });
     }
 
     public function onDeath() {
