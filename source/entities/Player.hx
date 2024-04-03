@@ -85,7 +85,7 @@ class Player extends PitEntity
         velocity = heading;
         velocity.normalize(SPEED);
 
-        moveBy(velocity.x * HXP.elapsed, velocity.y * HXP.elapsed, "walls");
+        moveBy(velocity.x * HXP.elapsed, velocity.y * HXP.elapsed, PitEntity.solids);
         updateSword();
 
         if(collide("gladiator", x, y) != null && ! Input.check("cheat")) {
@@ -113,14 +113,45 @@ class Player extends PitEntity
     }
 
     public function updateSword() {
+        var oldSword = sword.clone();
+        var tappedWall = false;
+        while(swordCollide("walls")) {
+            tappedWall = true;
+            swordAngle += (rotatingClockwise ? 0.1 : -0.1);
+            var swordCalc = new Vector2(0, -SWORD_LENGTH);
+            swordCalc.rotate(swordAngle);
+            sword = new Vector2(centerX + swordCalc.x, centerY + swordCalc.y);
+        }
+        if(tappedWall) {
+            rotatingClockwise = !rotatingClockwise;
+        }
         var swordCalc = new Vector2(0, -SWORD_LENGTH);
-        //if(velocity.length == 0) {
-            swordAngle += (
-                HXP.elapsed * SWORD_ROTATION_SPEED * (rotatingClockwise ? -1: 1)
-            );
-        //}
+        swordAngle += (
+            HXP.elapsed * SWORD_ROTATION_SPEED * (rotatingClockwise ? -1: 1)
+        );
         swordCalc.rotate(swordAngle);
         sword = new Vector2(centerX + swordCalc.x, centerY + swordCalc.y);
+    }
+
+    private function swordCollide(checkType:String) {
+        return (
+            HXP.scene.collidePoint(checkType, sword.x, sword.y) != null
+            || HXP.scene.collidePoint(
+                checkType,
+                (centerX + centerX + sword.x) / 3,
+                (centerY + centerY + sword.y) / 3
+            ) != null
+            || HXP.scene.collidePoint(
+                checkType,
+                (centerX + sword.x) / 2,
+                (centerY + sword.y) / 2
+            ) != null
+            || HXP.scene.collidePoint(
+                checkType,
+                (centerX + sword.x + sword.x) / 3,
+                (centerY + sword.y + sword.y) / 3
+            ) != null
+        );
     }
 
     public function die() {

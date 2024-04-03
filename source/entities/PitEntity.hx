@@ -59,6 +59,19 @@ class PitEntity extends Entity
         return cast(HXP.scene, GameScene).player;
     }
 
+    private function collidingWithSword() {
+        var player = getPlayer();
+        return (
+            player.hasSword
+            && !player.isDead
+            && (collidePoint(x, y, player.sword.x, player.sword.y)
+            || collidePoint(
+                x, y, player.centerX + (player.sword.x - player.centerX) / 2,
+                player.centerY + (player.sword.y - player.centerY) / 2)
+            )
+        );
+    }
+
     private function explode(
         numExplosions:Int,
         screenShakeDuration:Float,

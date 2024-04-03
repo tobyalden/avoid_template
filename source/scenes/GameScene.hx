@@ -46,6 +46,7 @@ class GameScene extends Scene
                 player = cast(entity, Player);
             }
             if(entity.type == "gladiator") {
+                //continue;
                 gladiators.push(cast(entity, Gladiator));
             }
             add(entity);

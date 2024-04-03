@@ -180,15 +180,7 @@ class Gladiator extends PitEntity
             chasePlayer();
         }
 
-        var player = getPlayer();
-        if(
-            player.hasSword && !player.isDead
-            && (collidePoint(x, y, player.sword.x, player.sword.y)
-            || collidePoint(
-                x, y, player.centerX + (player.sword.x - player.centerX) / 2,
-                player.centerY + (player.sword.y - player.centerY) / 2)
-            )
-        ) {
+        if(collidingWithSword()) {
             HXP.scene.remove(this);
             explode(10, 0.2, 2);
         }
