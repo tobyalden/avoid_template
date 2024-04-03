@@ -13,6 +13,7 @@ import scenes.*;
 class Player extends PitEntity
 {
     public static inline var SPEED = 100;
+    public static inline var SWORD_ROTATION_SPEED = 4;
     public static inline var SWORD_LENGTH = 25;
 
     public var hasMoved(default, null):Bool;
@@ -21,6 +22,7 @@ class Player extends PitEntity
     public var hasSword(default, null):Bool;
     private var sprite:Image;
     private var velocity:Vector2;
+    private var swordAngle:Float;
     private var rotatingClockwise:Bool;
 
     public function new(x:Float, y:Float) {
@@ -37,7 +39,9 @@ class Player extends PitEntity
         hasMoved = false;
         isDead = false;
         sword = new Vector2(centerX, centerY - SWORD_LENGTH);
-        hasSword = false;
+        //hasSword = false;
+        hasSword = true;
+        swordAngle = 0;
         rotatingClockwise = false;
     }
 
@@ -109,11 +113,14 @@ class Player extends PitEntity
     }
 
     public function updateSword() {
-        var towardsSword = new Vector2(centerX - sword.x, centerY - sword.y);
-        towardsSword.rotate(HXP.elapsed * 4 * (rotatingClockwise ? -1: 1));
-        towardsSword.normalize(SWORD_LENGTH);
-        sword.x = centerX - towardsSword.x;
-        sword.y = centerY - towardsSword.y;
+        var swordCalc = new Vector2(0, -SWORD_LENGTH);
+        //if(velocity.length == 0) {
+            swordAngle += (
+                HXP.elapsed * SWORD_ROTATION_SPEED * (rotatingClockwise ? -1: 1)
+            );
+        //}
+        swordCalc.rotate(swordAngle);
+        sword = new Vector2(centerX + swordCalc.x, centerY + swordCalc.y);
     }
 
     public function die() {
