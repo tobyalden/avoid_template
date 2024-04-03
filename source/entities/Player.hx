@@ -10,7 +10,7 @@ import haxepunk.tweens.misc.*;
 import haxepunk.utils.*;
 import scenes.*;
 
-class Player extends Entity
+class Player extends PitEntity
 {
     public static inline var SPEED = 100;
     public static inline var SWORD_LENGTH = 25;
@@ -119,39 +119,9 @@ class Player extends Entity
     public function die() {
         isDead = true;
         visible = false;
-        explode();
+        explode(50, 1, 4);
         Main.sfx["die"].play();
         cast(HXP.scene, GameScene).onDeath();
-    }
-
-    private function explode() {
-        var numExplosions = 50;
-        var directions = new Array<Vector2>();
-        for(i in 0...numExplosions) {
-            var angle = (2/numExplosions) * i;
-            directions.push(new Vector2(Math.cos(angle), Math.sin(angle)));
-            directions.push(new Vector2(-Math.cos(angle), Math.sin(angle)));
-            directions.push(new Vector2(Math.cos(angle), -Math.sin(angle)));
-            directions.push(new Vector2(-Math.cos(angle), -Math.sin(angle)));
-        }
-        var count = 0;
-        for(direction in directions) {
-            direction.scale(0.8 * Math.random());
-            direction.normalize(
-                Math.max(0.1 + 0.2 * Math.random(), direction.length)
-            );
-            var explosion = new Particle(
-                centerX, centerY, directions[count], 1, 1
-            );
-            explosion.layer = -99;
-            HXP.scene.add(explosion);
-            count++;
-        }
-
-#if desktop
-        Sys.sleep(0.02);
-#end
-        HXP.scene.camera.shake(1, 4);
     }
 
     override public function render(camera:Camera) {

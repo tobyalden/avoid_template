@@ -8,7 +8,7 @@ import haxepunk.utils.*;
 import haxepunk.Tween;
 import haxepunk.tweens.misc.*;
 
-class Sword extends Entity
+class Sword extends PitEntity
 {
     private var sprite:Image;
 

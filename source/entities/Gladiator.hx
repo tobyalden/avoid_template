@@ -10,7 +10,7 @@ import haxepunk.tweens.misc.*;
 import haxepunk.utils.*;
 import scenes.*;
 
-class Gladiator extends Entity
+class Gladiator extends PitEntity
 {
     public static inline var MAX_CHASE_SPEED = 100;
     public static inline var ACCEL = 100;
@@ -180,7 +180,7 @@ class Gladiator extends Entity
             chasePlayer();
         }
 
-        var player = cast(HXP.scene.getInstance("player"), Player);
+        var player = getPlayer();
         if(
             player.hasSword && !player.isDead
             && (collidePoint(x, y, player.sword.x, player.sword.y)
@@ -190,7 +190,7 @@ class Gladiator extends Entity
             )
         ) {
             HXP.scene.remove(this);
-            //explode();
+            explode(10, 0.2, 2);
         }
 
 
@@ -211,10 +211,6 @@ class Gladiator extends Entity
             velocity = towardsPlayer;
             lungeCooldown.start();
         }, this);
-    }
-
-    private function getPlayer() {
-        return cast(HXP.scene, GameScene).player;
     }
 
     override public function moveCollideX(e:Entity) {
