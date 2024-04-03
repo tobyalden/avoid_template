@@ -124,9 +124,10 @@ class GameScene extends Scene
         for(display in [titleDisplay, tutorialDisplay]) {
             HXP.tween(display, {"alpha": 0}, 0.5);
         }
-        HXP.alarm(33, function() {
-            cast(getInstance("door"), Door).open();
-        });
+        cast(getInstance("sword"), Sword).dropIn();
+        //HXP.alarm(33, function() {
+            //cast(getInstance("door"), Door).open();
+        //});
     }
 
     public function onDeath() {

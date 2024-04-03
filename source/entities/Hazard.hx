@@ -10,8 +10,6 @@ import haxepunk.tweens.misc.*;
 import haxepunk.utils.*;
 import scenes.*;
 
-// Add in new phases for new game+
-
 class Hazard extends Entity
 {
     public static inline var MAX_CHASE_SPEED = 100;
@@ -48,12 +46,10 @@ class Hazard extends Entity
         phaseTweener = new MultiVarTween();
         phaseTweener.onComplete.bind(function() {
             advancePhase();
-            trace('advancing from phase tweenter');
         });
         addTween(phaseTweener);
         lungeCooldown = new Alarm(LUNGE_COOLDOWN, TweenType.Persist);
         lungeCooldown.onComplete.bind(function() {
-            trace('advancing from lunge');
             advancePhase();
         });
         addTween(lungeCooldown);
@@ -76,7 +72,6 @@ class Hazard extends Entity
     }
 
     override public function update() {
-        //trace('phase at start: ${phase}');
         if(!getPlayer().hasMoved) {
             return;
         }
@@ -122,7 +117,6 @@ class Hazard extends Entity
             if(allReady && number == 1) {
                 for(hazard in cast(HXP.scene, GameScene).hazards) {
                     hazard.advancePhase();
-                    trace('advancing manually');
                     hazard.lunge();
                 }
             }
@@ -185,13 +179,26 @@ class Hazard extends Entity
         else if(phase == 16) {
             chasePlayer();
         }
+
+        var player = cast(HXP.scene.getInstance("player"), Player);
+        if(
+            player.hasSword && !player.isDead
+            && (collidePoint(x, y, player.sword.x, player.sword.y)
+            || collidePoint(
+                x, y, player.centerX + (player.sword.x - player.centerX) / 2,
+                player.centerY + (player.sword.y - player.centerY) / 2)
+            )
+        ) {
+            HXP.scene.remove(this);
+            //explode();
+        }
+
+
         super.update();
         phaseAge += 1;
-        //trace('phase at end: ${phase}\n');
     }
 
     public function advancePhase() {
-        trace('BOOP');
         phase += 1;
         phaseAge = 0;
     }

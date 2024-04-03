@@ -62,7 +62,8 @@
         {"name": "hazard", "id": 7, "_eid": "96048241", "x": 130, "y": 40, "width": 10, "height": 10, "originX": 0, "originY": 0},
         {"name": "hazard", "id": 8, "_eid": "96048241", "x": 40, "y": 40, "width": 10, "height": 10, "originX": 0, "originY": 0},
         {"name": "hazard", "id": 9, "_eid": "96048241", "x": 40, "y": 130, "width": 10, "height": 10, "originX": 0, "originY": 0},
-        {"name": "hazard", "id": 10, "_eid": "96048241", "x": 130, "y": 130, "width": 10, "height": 10, "originX": 0, "originY": 0}
+        {"name": "hazard", "id": 10, "_eid": "96048241", "x": 130, "y": 130, "width": 10, "height": 10, "originX": 0, "originY": 0},
+        {"name": "sword", "id": 11, "_eid": "17991586", "x": 140, "y": 30, "originX": 0, "originY": 0}
       ]
     }
   ]
