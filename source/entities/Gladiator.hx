@@ -10,7 +10,7 @@ import haxepunk.tweens.misc.*;
 import haxepunk.utils.*;
 import scenes.*;
 
-class Hazard extends Entity
+class Gladiator extends Entity
 {
     public static inline var MAX_CHASE_SPEED = 100;
     public static inline var ACCEL = 100;
@@ -29,12 +29,12 @@ class Hazard extends Entity
     public function new(x:Float, y:Float, number:Int) {
         super(x, y);
         this.number = number;
-        type = "hazard";
+        type = "gladiator";
         var hitbox = new Hitbox(10, 10);
         hitbox.x = -5;
         hitbox.y = -5;
         mask = hitbox;
-        sprite = new Spritemap("graphics/hazard.png", 10, 10);
+        sprite = new Spritemap("graphics/gladiator.png", 10, 10);
         sprite.add("idle", [0]);
         sprite.add("tell", [1]);
         sprite.play("idle");
@@ -68,7 +68,7 @@ class Hazard extends Entity
         if(velocity.length > MAX_CHASE_SPEED) {
             velocity.normalize(MAX_CHASE_SPEED);
         }
-        moveBy(velocity.x * HXP.elapsed, velocity.y * HXP.elapsed, ["hazard", "walls", "door"]);
+        moveBy(velocity.x * HXP.elapsed, velocity.y * HXP.elapsed, ["gladiator", "walls", "door"]);
     }
 
     override public function update() {
@@ -90,7 +90,7 @@ class Hazard extends Entity
             if(phaseAge == 0) {
                 phaseTweener.tween(velocity, {x: 0, y: 0}, 2, Ease.sineInOut);
             }
-            moveBy(velocity.x * HXP.elapsed, velocity.y * HXP.elapsed, ["hazard", "walls", "door"]);
+            moveBy(velocity.x * HXP.elapsed, velocity.y * HXP.elapsed, ["gladiator", "walls", "door"]);
         }
         else if(phase == 3) {
             if(phaseAge == 0) {
@@ -105,25 +105,25 @@ class Hazard extends Entity
                 }, this);
             }
             velocity.normalize((1 - lungeCooldown.percent) * MAX_LUNGE_SPEED);
-            moveBy(velocity.x * HXP.elapsed, velocity.y * HXP.elapsed, ["hazard", "walls"]);
+            moveBy(velocity.x * HXP.elapsed, velocity.y * HXP.elapsed, ["gladiator", "walls"]);
         }
         else if(phase == 5) {
             var allReady = true;
-            for(hazard in cast(HXP.scene, GameScene).hazards) {
-                if(hazard.phase != 5) {
+            for(gladiator in cast(HXP.scene, GameScene).gladiators) {
+                if(gladiator.phase != 5) {
                     allReady = false;
                 }
             }
             if(allReady && number == 1) {
-                for(hazard in cast(HXP.scene, GameScene).hazards) {
-                    hazard.advancePhase();
-                    hazard.lunge();
+                for(gladiator in cast(HXP.scene, GameScene).gladiators) {
+                    gladiator.advancePhase();
+                    gladiator.lunge();
                 }
             }
         }
         else if(phase == 6) {
             velocity.normalize((1 - lungeCooldown.percent) * MAX_LUNGE_SPEED);
-            moveBy(velocity.x * HXP.elapsed, velocity.y * HXP.elapsed, ["hazard", "walls"]);
+            moveBy(velocity.x * HXP.elapsed, velocity.y * HXP.elapsed, ["gladiator", "walls"]);
         }
         else if(phase == 7) {
             if(phaseAge == 0) {

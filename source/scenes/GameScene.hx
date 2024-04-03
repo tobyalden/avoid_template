@@ -19,7 +19,7 @@ class GameScene extends Scene
     public static var highScore:Float;
 
     public var curtain(default, null):Curtain;
-    public var hazards(default, null):Array<Hazard>;
+    public var gladiators(default, null):Array<Gladiator>;
     public var player(default, null):Player;
     private var scoreDisplay:Text;
     private var titleDisplay:Text;
@@ -39,14 +39,14 @@ class GameScene extends Scene
 
         addGraphic(new Image("graphics/background.png"));
 
-        hazards = [];
+        gladiators = [];
         level = add(new Level("level"));
         for(entity in level.entities) {
             if(entity.name == "player") {
                 player = cast(entity, Player);
             }
-            if(entity.type == "hazard") {
-                hazards.push(cast(entity, Hazard));
+            if(entity.type == "gladiator") {
+                gladiators.push(cast(entity, Gladiator));
             }
             add(entity);
         }
@@ -98,7 +98,7 @@ class GameScene extends Scene
                 scoreDisplay.alpha = 1;
                 Main.sfx["bell"].play(0.75);
             }
-            scoreDisplay.text = 'Ph${hazards[0].phase} - ${timeRound(totalTime, 0)}';
+            scoreDisplay.text = '${timeRound(totalTime, 0)}';
             scoreDisplay.x = HXP.width / 2 - scoreDisplay.textWidth / 2;
         }
 

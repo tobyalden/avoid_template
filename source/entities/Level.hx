@@ -51,7 +51,7 @@ class Level extends Entity
                         entities.push(new Sword(entity.x, entity.y));
                     }
                     if(entity.name == "hazard") {
-                        entities.push(new Hazard(entity.x, entity.y, hazardCount));
+                        entities.push(new Gladiator(entity.x, entity.y, hazardCount));
                         hazardCount++;
                     }
                     if(entity.name == "door") {
