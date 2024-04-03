@@ -39,17 +39,6 @@ class GameScene extends Scene
 
         addGraphic(new Image("graphics/background.png"));
 
-        //player = add(new Player(HXP.width / 2, HXP.height / 2));
-
-            //new Hazard(HXP.width / 4, HXP.height / 4, 1),
-            //new Hazard(HXP.width / 4 * 3, HXP.height / 4 * 3, 2),
-            //new Hazard(HXP.width / 4, HXP.height / 4 * 3, 3),
-            //new Hazard(HXP.width / 4 * 3, HXP.height / 4, 4)
-        //];
-        //for(hazard in hazards) {
-            //add(hazard);
-        //}
-
         hazards = [];
         level = add(new Level("level"));
         for(entity in level.entities) {
