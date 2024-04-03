@@ -43,7 +43,7 @@ class Hazard extends Entity
         sprite.centerOrigin();
         graphic = sprite;
         velocity = new Vector2();
-        phase = 0;
+        phase = 13;
         start = new Vector2(x, y);
         phaseTweener = new MultiVarTween();
         phaseTweener.onComplete.bind(function() {
@@ -65,6 +65,16 @@ class Hazard extends Entity
         return towardsEntity;
     }
 
+    private function chasePlayer() {
+        var towardsPlayer = getVectorTowards(getPlayer());
+        towardsPlayer.normalize(ACCEL * HXP.elapsed);
+        velocity.add(towardsPlayer);
+        if(velocity.length > MAX_CHASE_SPEED) {
+            velocity.normalize(MAX_CHASE_SPEED);
+        }
+        moveBy(velocity.x * HXP.elapsed, velocity.y * HXP.elapsed, ["hazard", "walls", "door"]);
+    }
+
     override public function update() {
         //trace('phase at start: ${phase}');
         if(!getPlayer().hasMoved) {
@@ -79,13 +89,7 @@ class Hazard extends Entity
                     advancePhase();
                 }, this);
             }
-            var towardsPlayer = getVectorTowards(getPlayer());
-            towardsPlayer.normalize(ACCEL * HXP.elapsed);
-            velocity.add(towardsPlayer);
-            if(velocity.length > MAX_CHASE_SPEED) {
-                velocity.normalize(MAX_CHASE_SPEED);
-            }
-            moveBy(velocity.x * HXP.elapsed, velocity.y * HXP.elapsed, ["hazard", "walls", "door"]);
+            chasePlayer();
         }
         else if(phase == 2) {
             if(phaseAge == 0) {
@@ -170,6 +174,16 @@ class Hazard extends Entity
             if(phaseAge == 0) {
                 phaseTweener.tween(this, {x: HXP.width / 8}, 0.33, Ease.sineInOut);
             }
+        }
+        else if(phase == 15) {
+            if(phaseAge == 0) {
+                HXP.alarm(number + 2, function() {
+                    advancePhase();
+                }, this);
+            }
+        }
+        else if(phase == 16) {
+            chasePlayer();
         }
         super.update();
         phaseAge += 1;
