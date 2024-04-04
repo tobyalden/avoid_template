@@ -61,7 +61,7 @@ class PitEntity extends Entity
 
     private function collidingWithSword():Bool {
         var player = getPlayer();
-        if(!player.hasSword || player.isDead) {
+        if(player.sword == null || player.isDead) {
             return false;
         }
         var swordLength = new Vector2(player.sword.x - x, player.sword.y - y);

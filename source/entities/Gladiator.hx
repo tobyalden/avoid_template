@@ -177,7 +177,7 @@ class Gladiator extends PitEntity
             chasePlayer();
         }
 
-        if(collidingWithSword()) {
+        if(collide("sword", x, y) != null) {
             die();
         }
 

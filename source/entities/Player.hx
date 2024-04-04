@@ -9,6 +9,7 @@ import haxepunk.Tween;
 import haxepunk.tweens.misc.*;
 import haxepunk.utils.*;
 import scenes.*;
+import entities.Sword;
 
 class Player extends PitEntity
 {
@@ -18,8 +19,7 @@ class Player extends PitEntity
 
     public var hasMoved(default, null):Bool;
     public var isDead(default, null):Bool;
-    public var sword(default, null):Vector2;
-    public var hasSword(default, null):Bool;
+    public var sword(default, null):Sword;
     private var sprite:Image;
     private var velocity:Vector2;
     private var swordAngle:Float;
@@ -38,9 +38,8 @@ class Player extends PitEntity
         velocity = new Vector2();
         hasMoved = false;
         isDead = false;
-        sword = new Vector2(centerX, centerY - SWORD_LENGTH);
-        //hasSword = false;
-        hasSword = true;
+        //sword = new Sword();
+        sword = null;
         swordAngle = 0;
         rotatingClockwise = false;
     }
@@ -90,15 +89,17 @@ class Player extends PitEntity
         velocity.normalize(SPEED);
 
         moveBy(velocity.x * HXP.elapsed, velocity.y * HXP.elapsed, PitEntity.solids);
-        updateSword();
+        if(sword != null) {
+            updateSword();
+        }
 
         if(collide("hazard", x, y) != null && ! Input.check("cheat")) {
             die();
         }
-        if(collide("sword", x, y) != null) {
-            HXP.scene.remove(HXP.scene.getInstance("sword"));
-            getSword();
-        }
+        //if(collide("sworditem", x, y) != null) {
+            //HXP.scene.remove(HXP.scene.getInstance("sworditem"));
+            //getSword();
+        //}
         var _door = collide("door", x, y);
         if(_door != null && _door.collidePoint(_door.x, _door.y, centerX, centerY)) {
             var door = cast(_door, Door);
@@ -114,37 +115,16 @@ class Player extends PitEntity
     }
 
     private function getSword() {
-        hasSword = true;
+        //hasSword = true;
     }
 
     public function updateSword() {
-        var swordCalc = new Vector2(0, -SWORD_LENGTH);
+        sword.moveTo(centerX, centerY);
         swordAngle += (
-            HXP.elapsed * SWORD_ROTATION_SPEED * (rotatingClockwise ? -1: 1)
+            HXP.elapsed * SWORD_ROTATION_SPEED * (rotatingClockwise ? -1 : 1)
         );
-        swordCalc.rotate(swordAngle);
-        sword = new Vector2(centerX + swordCalc.x, centerY + swordCalc.y);
-    }
-
-    private function swordCollide(checkType:String) {
-        return (
-            HXP.scene.collidePoint(checkType, sword.x, sword.y) != null
-            || HXP.scene.collidePoint(
-                checkType,
-                (centerX + centerX + sword.x) / 3,
-                (centerY + centerY + sword.y) / 3
-            ) != null
-            || HXP.scene.collidePoint(
-                checkType,
-                (centerX + sword.x) / 2,
-                (centerY + sword.y) / 2
-            ) != null
-            || HXP.scene.collidePoint(
-                checkType,
-                (centerX + sword.x + sword.x) / 3,
-                (centerY + sword.y + sword.y) / 3
-            ) != null
-        );
+        sword.sprite.angle = swordAngle * 180 / Math.PI;
+        sword.hitbox.angle = swordAngle * 180 / Math.PI;
     }
 
     public function die() {
@@ -152,20 +132,9 @@ class Player extends PitEntity
         visible = false;
         explode(50, 1, 4);
         Main.sfx["die"].play();
-        cast(HXP.scene, GameScene).onDeath();
-    }
-
-    override public function render(camera:Camera) {
-        super.render(camera);
-        if(hasSword) {
-            // Draw sword
-            Draw.lineThickness = 3;
-            Draw.line(
-                centerX - HXP.scene.camera.x,
-                centerY - HXP.scene.camera.y,
-                sword.x - HXP.scene.camera.x,
-                sword.y - HXP.scene.camera.y
-            );
+        if(sword != null) {
+            HXP.scene.remove(sword);
         }
+        cast(HXP.scene, GameScene).onDeath();
     }
 }

@@ -10,33 +10,26 @@ import haxepunk.tweens.misc.*;
 
 class Sword extends PitEntity
 {
-    private var sprite:Image;
+    public var sprite:Image;
+    public var hitbox:Polygon;
 
-    public function new(x:Float, y:Float) {
-	    super(x, y);
+    public function new() {
+	    super(0, 0);
         name = "sword";
         type = "sword";
         layer = -10;
-        mask = new Hitbox(10, 10);
         sprite = new Image("graphics/sword.png");
-        sprite.centerOrigin();
-        sprite.x += 5;
-        sprite.y += 5;
-        sprite.alpha = 0;
-        sprite.angle = 900;
-        sprite.scale = 3;
+        sprite.originX = 1.5;
         graphic = sprite;
-        collidable = false;
-    }
-
-    public function dropIn() {
-        var fadeTween = new MultiVarTween();
-        fadeTween.tween(sprite, {"alpha": 1, "angle": 25, "scale": 1}, 3, Ease.bounceOut);
-        addTween(fadeTween, true);
-        collidable = true;
+        hitbox = Polygon.createFromArray([
+            0, 0, 3, 0, 3, 25, 0, 25
+        ]);
+        hitbox.origin = new Vector2(1.5, 0);
+        mask = hitbox;
     }
 
     public override function update() {
         super.update();
     }
 }
+

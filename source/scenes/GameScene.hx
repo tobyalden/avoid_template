@@ -56,7 +56,7 @@ class GameScene extends Scene
     private var entranceDoorName:String;
 
     public function new(
-        levelName:String = "gauntlet",
+        levelName:String = "pit",
         entranceDoorName:String = null,
     ) {
         super();
@@ -92,6 +92,10 @@ class GameScene extends Scene
         }
         player = new Player(playerStart.x, playerStart.y);
         add(player);
+        if(player.sword != null) {
+            add(player.sword);
+            player.sword.moveTo(player.centerX, player.centerY);
+        }
 
         scoreDisplay = new Text("0", 0, 0, HXP.width, 0);
         scoreDisplay.alpha = 0;
@@ -128,7 +132,6 @@ class GameScene extends Scene
         if(!hasGlobalFlag(GF_IS_NOT_NEW_GAME)) {
             totalTime = 0;
             highScore = Data.read("highscore", 0);
-            pause();
         }
         else {
             tutorialDisplay.alpha = 0;
@@ -211,7 +214,6 @@ class GameScene extends Scene
     }
 
     public function onStart() {
-        unpause();
         fadeOutCenterText(false);
         //cast(getInstance("sword"), Sword).dropIn();
         // TODO: Add this back in

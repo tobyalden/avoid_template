@@ -49,7 +49,7 @@ class Level extends Entity
                         playerStart = new Vector2(entity.x, entity.y);
                     }
                     if(entity.name == "sword") {
-                        entities.push(new Sword(entity.x, entity.y));
+                        entities.push(new SwordItem(entity.x, entity.y));
                     }
                     if(entity.name == "gladiator") {
                         entities.push(new Gladiator(entity.x, entity.y, hazardCount));
