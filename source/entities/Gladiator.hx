@@ -189,7 +189,7 @@ class Gladiator extends PitEntity
         phaseAge += 1;
     }
 
-    private function die() {
+    public function die() {
         HXP.scene.remove(this);
         getScene().gladiators.remove(this);
         explode(10, 0.2, 2);

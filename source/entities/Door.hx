@@ -14,19 +14,32 @@ import scenes.GameScene;
 class Door extends PitEntity
 {
     public var destination(default, null):String;
+    public var destinationDoorName(default, null):String;
+    public var entranceLocation(default, null):Vector2;
     public var isOpen(default, null):Bool;
 
     public function new(
-        x:Float, y:Float, width:Int, height:Int, destination:String,
-        name:String
+        x:Float, y:Float, width:Int, height:Int,
+        name:String, destination:String, destinationDoorName:String,
+        startsOpen:Bool, entranceLocation:Vector2
     ) {
         super(x, y);
-        this.destination = destination;
         this.name = name;
-        type = "walls";
+        this.destination = destination;
+        this.destinationDoorName = destinationDoorName;
+        this.entranceLocation = entranceLocation;
         mask = new Hitbox(width, height);
         graphic = new ColoredRect(width, height, 0x00FFFF);
-        isOpen = false;
+        isOpen = startsOpen;
+
+        if(
+            name == "portcullis"
+            && GameScene.hasGlobalFlag(GameScene.GF_IS_NOT_NEW_GAME)
+        ) {
+            isOpen = true;
+        }
+
+        type = isOpen ? "door" : "walls";
     }
 
     public function open() {
@@ -40,8 +53,12 @@ class Door extends PitEntity
     }
 
     override public function update() {
-        if(name == "gladiator") {
-            if(getScene().gladiators.length == 0) {
+        if(name == "portcullis") {
+            if(
+                getScene().gladiators.length == 0
+                && !GameScene.hasGlobalFlag(GameScene.GF_IS_NOT_NEW_GAME)
+            ) {
+                GameScene.addGlobalFlag(GameScene.GF_GLADIATORS_SLAIN);
                 open();
             }
         }

@@ -15,8 +15,28 @@ import openfl.Assets;
 
 class GameScene extends Scene
 {
+    public static inline var GF_GLADIATORS_SLAIN = 0;
+    public static inline var GF_IS_NOT_NEW_GAME = 1;
+
+    public static var roomTitles:Map<String, String> = [
+        "pit" => "THE PIT",
+        "hallway" => "CORRIDOR",
+    ];
+
     public static var totalTime:Float = 0;
-    public static var highScore:Float;
+    public static var highScore:Float = 0;
+    public static var globalFlags:Array<Int> = [];
+
+    public static function addGlobalFlag(addFlag:Int) {
+        if(hasGlobalFlag(addFlag)) {
+            return;
+        }
+        globalFlags.push(addFlag);
+    }
+
+    public static function hasGlobalFlag(checkFlag:Int) {
+        return globalFlags.indexOf(checkFlag) != -1;
+    }
 
     public var curtain(default, null):Curtain;
     public var gladiators(default, null):Array<Gladiator>;
@@ -29,32 +49,56 @@ class GameScene extends Scene
     private var canReset:Bool;
     private var level:Level;
 
-    override public function begin() {
-        Data.load(Main.SAVE_FILE_NAME);
-        totalTime = 0;
-        highScore = Data.read("highscore", 0);
+    private var levelName:String;
+    private var entranceDoorName:String;
 
+    public function new(
+        levelName:String = "pit",
+        entranceDoorName:String = null,
+    ) {
+        super();
+        this.levelName = levelName;
+        this.entranceDoorName = entranceDoorName;
+    }
+
+    override public function begin() {
         curtain = add(new Curtain());
         curtain.fadeOut(0.25);
 
         addGraphic(new Image("graphics/background.png"));
 
         gladiators = [];
-        level = add(new Level("level"));
+        level = add(new Level(levelName));
+        var playerStart:Vector2 = null;
         for(entity in level.entities) {
-            if(entity.name == "player") {
-                player = cast(entity, Player);
-            }
-            if(entity.type == "gladiator") {
-                //continue;
+            if(Type.getClass(entity) == Gladiator) {
+                if(hasGlobalFlag(GF_IS_NOT_NEW_GAME)) {
+                    continue;
+                }
                 gladiators.push(cast(entity, Gladiator));
+            }
+            if(Type.getClass(entity) == Door) {
+                var door = cast(entity, Door);
+                if(door.name == entranceDoorName) {
+                    playerStart = door.entranceLocation.clone();
+                }
             }
             add(entity);
         }
 
+        if(playerStart == null) {
+            playerStart = new Vector2(level.playerStart.x, level.playerStart.y);
+        }
+        player = new Player(playerStart.x, playerStart.y);
+        add(player);
+
         scoreDisplay = new Text("0", 0, 0, HXP.width, 0);
         scoreDisplay.alpha = 0;
-        titleDisplay = new Text("OWIWO");
+        var roomTitle = "?";
+        if(roomTitles.exists(levelName)) {
+            roomTitle = roomTitles[levelName];
+        }
+        titleDisplay = new Text(roomTitle);
         titleDisplay.centerOrigin();
         titleDisplay.x = HXP.width / 2 - 3; // idk why but you need a 3 pixel offset to get it truly centered
         titleDisplay.y = HXP.height / 2 - 25;
@@ -71,15 +115,28 @@ class GameScene extends Scene
         replayPrompt.y = HXP.height - replayPrompt.textHeight - 10;
         replayPrompt.alpha = 0;
         addGraphic(replayPrompt, -10);
-
         colorChanger = new ColorTween(TweenType.PingPong);
         colorChanger.tween(0.25, 0xFF2000, 0xFFFB6E, Ease.sineInOut);
         addTween(colorChanger, true);
+
+        if(!hasGlobalFlag(GF_IS_NOT_NEW_GAME)) {
+            totalTime = 0;
+            highScore = Data.read("highscore", 0);
+        }
+        else {
+            tutorialDisplay.alpha = 0;
+            player.setHasMoved(true);
+            HXP.alarm(0.5, function() {
+                fadeOutCenterText(true);
+            });
+        }
 
         canReset = false;
     }
 
     override public function update() {
+        debug();
+
         if(player.isDead) {
             if(Input.pressed("reset") && canReset) {
                 reset();
@@ -106,11 +163,25 @@ class GameScene extends Scene
         super.update();
     }
 
+    private function debug() {
+        if(Input.pressed("debug_reset")) {
+            HXP.scene = new GameScene();
+        }
+        if(Input.pressed("debug_kill")) {
+            var gladiators = [];
+            getType("gladiator", gladiators);
+            for(gladiator in gladiators) {
+                cast(gladiator, Gladiator).die();
+            }
+        }
+    }
+
     public function useDoor(door:Door) {
+        addGlobalFlag(GF_IS_NOT_NEW_GAME);
         pause();
         curtain.fadeIn(0.5);
         HXP.alarm(0.5, function() {
-            HXP.scene = new GameScene();
+            HXP.scene = new GameScene(door.destination, door.destinationDoorName);
         });
     }
 
@@ -121,14 +192,16 @@ class GameScene extends Scene
     }
 
     public function onStart() {
+        fadeOutCenterText(false);
+        //cast(getInstance("sword"), Sword).dropIn();
+        // TODO: Add this back in
+    }
+
+    private function fadeOutCenterText(fadeSlowly:Bool) {
         HXP.tween(scoreDisplay, {"alpha": highScore > 0 ? 0.5 : 1}, 0.5);
         for(display in [titleDisplay, tutorialDisplay]) {
             HXP.tween(display, {"alpha": 0}, 0.5);
         }
-        cast(getInstance("sword"), Sword).dropIn();
-        //HXP.alarm(33, function() {
-            //cast(getInstance("door"), Door).open();
-        //});
     }
 
     public function onDeath() {

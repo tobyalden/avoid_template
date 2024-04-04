@@ -31,7 +31,9 @@ class Main extends Engine
         Key.define("left", [Key.A, Key.LEFT]);
         Key.define("right", [Key.D, Key.RIGHT]);
         Key.define("cheat", [Key.C]);
-        Key.define("reset", [Key.W, Key.UP, Key.SPACE, Key.ENTER]);
+        Key.define("reset", [Key.Z, Key.SPACE, Key.ENTER]);
+        Key.define("debug_reset", [Key.R]);
+        Key.define("debug_kill", [Key.K]);
 
         if(Gamepad.gamepad(0) != null) {
             defineGamepadInputs(Gamepad.gamepad(0));
@@ -47,6 +49,8 @@ class Main extends Engine
             "bell" => new Sfx("audio/bell.ogg"),
             "die" => new Sfx("audio/die.ogg")
         ];
+
+        Data.load(Main.SAVE_FILE_NAME);
 
         HXP.scene = new GameScene();
     }

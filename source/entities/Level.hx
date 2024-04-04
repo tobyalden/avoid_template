@@ -12,6 +12,7 @@ class Level extends Entity
     private var walls:Grid;
     private var tiles:Tilemap;
     public var entities(default, null):Array<Entity>;
+    public var playerStart(default, null):Vector2;
 
     public function new(levelName:String) {
         super(0, 0);
@@ -45,7 +46,7 @@ class Level extends Entity
                 for(entityIndex in 0...layer.entities.length) {
                     var entity = layer.entities[entityIndex];
                     if(entity.name == "player") {
-                        entities.push(new Player(entity.x, entity.y));
+                        playerStart = new Vector2(entity.x, entity.y);
                     }
                     if(entity.name == "sword") {
                         entities.push(new Sword(entity.x, entity.y));
@@ -58,13 +59,27 @@ class Level extends Entity
                         entities.push(new Door(
                                 entity.x, entity.y,
                                 entity.width, entity.height,
+                                entity.values.name,
                                 entity.values.destination,
-                                entity.values.name
+                                entity.values.destinationDoorName,
+                                entity.values.startsOpen,
+                                new Vector2(
+                                    getPointNodes(entity, entity.nodes)[0].x,
+                                    getPointNodes(entity, entity.nodes)[0].y
+                                )
                         ));
                     }
                 }
             }
         }
+    }
+
+    private function getPointNodes(entity:Dynamic, nodes:Dynamic) {
+        var pointNodes = new Array<Vector2>();
+        for(i in 0...entity.nodes.length) {
+            pointNodes.push(new Vector2(entity.nodes[i].x, entity.nodes[i].y));
+        }
+        return pointNodes;
     }
 
     public function updateGraphic() {

@@ -29,11 +29,11 @@ class Player extends PitEntity
         super(x, y);
         name = "player";
         var hitbox = new Hitbox(10, 10);
-        hitbox.x = -5;
-        hitbox.y = -5;
+        //hitbox.x = -5;
+        //hitbox.y = -5;
         mask = hitbox;
         sprite = new Image("graphics/player.png");
-        sprite.centerOrigin();
+        //sprite.centerOrigin();
         graphic = sprite;
         velocity = new Vector2();
         hasMoved = false;
@@ -43,6 +43,10 @@ class Player extends PitEntity
         hasSword = true;
         swordAngle = 0;
         rotatingClockwise = false;
+    }
+
+    public function setHasMoved(newHasMoved:Bool) {
+        hasMoved = newHasMoved;
     }
 
     override public function update() {
@@ -99,6 +103,7 @@ class Player extends PitEntity
         if(_door != null && _door.collidePoint(_door.x, _door.y, centerX, centerY)) {
             var door = cast(_door, Door);
             if(door.isOpen) {
+                collidable = false;
                 cast(HXP.scene, GameScene).useDoor(door);
             }
         }
