@@ -61,7 +61,54 @@
           ],
           "values": {"name": "gauntlet-left", "destination": "hallway", "destinationDoorName": "hallway-right", "startsOpen": true}
         },
-        {"name": "shooter", "id": 3, "_eid": "25591581", "x": 110, "y": 20, "originX": 0, "originY": 0}
+        {
+          "name": "shooter",
+          "id": 7,
+          "_eid": "25591581",
+          "x": 150,
+          "y": 10,
+          "originX": 0,
+          "originY": 0,
+          "nodes": [
+            {"x": 300, "y": 160}
+          ]
+        },
+        {
+          "name": "shooter",
+          "id": 8,
+          "_eid": "25591581",
+          "x": 150,
+          "y": 160,
+          "originX": 0,
+          "originY": 0,
+          "nodes": [
+            {"x": 300, "y": 10}
+          ]
+        },
+        {
+          "name": "shooter",
+          "id": 9,
+          "_eid": "25591581",
+          "x": 380,
+          "y": 10,
+          "originX": 0,
+          "originY": 0,
+          "nodes": [
+            {"x": 230, "y": 160}
+          ]
+        },
+        {
+          "name": "shooter",
+          "id": 10,
+          "_eid": "25591581",
+          "x": 380,
+          "y": 160,
+          "originX": 0,
+          "originY": 0,
+          "nodes": [
+            {"x": 230, "y": 10}
+          ]
+        }
       ]
     },
     {

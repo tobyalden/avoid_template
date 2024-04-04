@@ -70,7 +70,13 @@ class Level extends Entity
                         ));
                     }
                     if(entity.name == "shooter") {
-                        entities.push(new Shooter(entity.x, entity.y));
+                        entities.push(new Shooter(
+                            entity.x, entity.y,
+                            new Vector2(
+                                getPointNodes(entity, entity.nodes)[0].x - entity.x,
+                                getPointNodes(entity, entity.nodes)[0].y - entity.y
+                            )
+                        ));
                     }
                 }
             }

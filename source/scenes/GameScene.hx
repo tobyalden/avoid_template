@@ -28,7 +28,7 @@ class GameScene extends Scene
 
     public static var totalTime:Float = 0;
     public static var highScore:Float = 0;
-    public static var globalFlags:Array<Int> = [];
+    public static var globalFlags:Array<Int> = [GF_IS_NOT_NEW_GAME];
 
     public static function addGlobalFlag(addFlag:Int) {
         if(hasGlobalFlag(addFlag)) {
@@ -56,7 +56,7 @@ class GameScene extends Scene
     private var entranceDoorName:String;
 
     public function new(
-        levelName:String = "pit",
+        levelName:String = "gauntlet",
         entranceDoorName:String = null,
     ) {
         super();

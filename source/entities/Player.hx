@@ -38,8 +38,8 @@ class Player extends PitEntity
         velocity = new Vector2();
         hasMoved = false;
         isDead = false;
-        //sword = new Sword();
-        sword = null;
+        sword = new Sword();
+        //sword = null;
         swordAngle = 0;
         rotatingClockwise = false;
     }

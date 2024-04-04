@@ -12,13 +12,16 @@ import scenes.*;
 
 class Shooter extends PitEntity
 {
-    public static inline var SHOT_INTERVAL = 0.5;
+    public static inline var SHOT_INTERVAL = 0.75;
 
     private var sprite:Image;
     private var shotTimer:Alarm;
+    private var shotHeading:Vector2;
 
-    public function new(x:Float, y:Float) {
+    public function new(x:Float, y:Float, shotHeading:Vector2) {
         super(x, y);
+        type = "walls";
+        this.shotHeading = shotHeading;
         layer = -1;
         var hitbox = new Hitbox(10, 10);
         mask = hitbox;
@@ -38,8 +41,7 @@ class Shooter extends PitEntity
     }
 
     private function shoot() {
-        var shotHeading = new Vector2(0, 1);
-        var bullet = new Bullet(centerX, centerY, shotHeading);
+        var bullet = new Bullet(centerX, centerY, shotHeading, this);
         bullet.moveBy(-bullet.width / 2, -bullet.height / 2);
         HXP.scene.add(bullet);
     }

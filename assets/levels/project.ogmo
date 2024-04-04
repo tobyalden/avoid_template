@@ -225,7 +225,7 @@
       "canFlipX": false,
       "canFlipY": false,
       "canSetColor": false,
-      "hasNodes": false,
+      "hasNodes": true,
       "nodeLimit": 0,
       "nodeDisplay": 0,
       "nodeGhost": true,
