@@ -60,7 +60,8 @@
             {"x": 10, "y": 85}
           ],
           "values": {"name": "gauntlet-left", "destination": "hallway", "destinationDoorName": "hallway-right", "startsOpen": true}
-        }
+        },
+        {"name": "shooter", "id": 3, "_eid": "25591581", "x": 110, "y": 20, "originX": 0, "originY": 0}
       ]
     },
     {

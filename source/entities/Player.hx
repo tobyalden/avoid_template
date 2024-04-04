@@ -92,7 +92,7 @@ class Player extends PitEntity
         moveBy(velocity.x * HXP.elapsed, velocity.y * HXP.elapsed, PitEntity.solids);
         updateSword();
 
-        if(collide("gladiator", x, y) != null && ! Input.check("cheat")) {
+        if(collide("hazard", x, y) != null && ! Input.check("cheat")) {
             die();
         }
         if(collide("sword", x, y) != null) {

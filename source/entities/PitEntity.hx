@@ -59,17 +59,21 @@ class PitEntity extends Entity
         return cast(HXP.scene, GameScene).player;
     }
 
-    private function collidingWithSword() {
+    private function collidingWithSword():Bool {
         var player = getPlayer();
-        return (
-            player.hasSword
-            && !player.isDead
-            && (collidePoint(x, y, player.sword.x, player.sword.y)
-            || collidePoint(
-                x, y, player.centerX + (player.sword.x - player.centerX) / 2,
-                player.centerY + (player.sword.y - player.centerY) / 2)
-            )
-        );
+        if(!player.hasSword || player.isDead) {
+            return false;
+        }
+        var swordLength = new Vector2(player.sword.x - x, player.sword.y - y);
+        swordLength.normalize();
+        var checkPoint = new Vector2(player.centerX, player.centerY);
+        for(i in 0...Player.SWORD_LENGTH) {
+            if(collidePoint(x, y, checkPoint.x, checkPoint.y)) {
+                return true;
+            }
+            checkPoint.add(swordLength);
+        }
+        return false;
     }
 
     private function explode(

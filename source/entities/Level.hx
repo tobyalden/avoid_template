@@ -69,6 +69,9 @@ class Level extends Entity
                                 )
                         ));
                     }
+                    if(entity.name == "shooter") {
+                        entities.push(new Shooter(entity.x, entity.y));
+                    }
                 }
             }
         }

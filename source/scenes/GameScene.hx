@@ -128,6 +128,7 @@ class GameScene extends Scene
         if(!hasGlobalFlag(GF_IS_NOT_NEW_GAME)) {
             totalTime = 0;
             highScore = Data.read("highscore", 0);
+            pause();
         }
         else {
             tutorialDisplay.alpha = 0;
@@ -178,7 +179,7 @@ class GameScene extends Scene
         }
         if(Input.pressed("debug_kill")) {
             var gladiators = [];
-            getType("gladiator", gladiators);
+            getClass(Gladiator, gladiators);
             for(gladiator in gladiators) {
                 cast(gladiator, Gladiator).die();
             }
@@ -196,11 +197,21 @@ class GameScene extends Scene
 
     private function pause() {
         for(entity in level.entities) {
+            if(Type.getClass(entity) == Door) {
+                continue;
+            }
             entity.active = false;
         }
     }
 
+    private function unpause() {
+        for(entity in level.entities) {
+            entity.active = true;
+        }
+    }
+
     public function onStart() {
+        unpause();
         fadeOutCenterText(false);
         //cast(getInstance("sword"), Sword).dropIn();
         // TODO: Add this back in

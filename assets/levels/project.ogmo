@@ -46,7 +46,7 @@
     {
       "exportID": "42404373",
       "name": "door",
-      "limit": 0,
+      "limit": -1,
       "size": {"x": 5, "y": 5},
       "origin": {"x": 0, "y": 0},
       "originAnchored": true,
@@ -179,6 +179,42 @@
         ]
       },
       "color": "#00ffdcff",
+      "tileX": false,
+      "tileY": false,
+      "tileSize": {"x": 16, "y": 16},
+      "resizeableX": false,
+      "resizeableY": false,
+      "rotatable": false,
+      "rotationDegrees": 360,
+      "canFlipX": false,
+      "canFlipY": false,
+      "canSetColor": false,
+      "hasNodes": false,
+      "nodeLimit": 0,
+      "nodeDisplay": 0,
+      "nodeGhost": true,
+      "tags": [],
+      "values": []
+    },
+    {
+      "exportID": "25591581",
+      "name": "shooter",
+      "limit": -1,
+      "size": {"x": 10, "y": 10},
+      "origin": {"x": 0, "y": 0},
+      "originAnchored": true,
+      "shape": {
+        "label": "Rectangle",
+        "points": [
+          {"x": -1, "y": -1},
+          {"x": 1, "y": -1},
+          {"x": -1, "y": 1},
+          {"x": 1, "y": -1},
+          {"x": -1, "y": 1},
+          {"x": 1, "y": 1}
+        ]
+      },
+      "color": "#ff9d00ff",
       "tileX": false,
       "tileY": false,
       "tileSize": {"x": 16, "y": 16},

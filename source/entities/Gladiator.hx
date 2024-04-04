@@ -29,19 +29,16 @@ class Gladiator extends PitEntity
     public function new(x:Float, y:Float, number:Int) {
         super(x, y);
         this.number = number;
-        type = "gladiator";
+        type = "hazard";
         var hitbox = new Hitbox(10, 10);
-        hitbox.x = -5;
-        hitbox.y = -5;
         mask = hitbox;
         sprite = new Spritemap("graphics/gladiator.png", 10, 10);
         sprite.add("idle", [0]);
         sprite.add("tell", [1]);
         sprite.play("idle");
-        sprite.centerOrigin();
         graphic = sprite;
         velocity = new Vector2();
-        phase = 13;
+        phase = 0;
         start = new Vector2(x, y);
         phaseTweener = new MultiVarTween();
         phaseTweener.onComplete.bind(function() {
@@ -68,7 +65,7 @@ class Gladiator extends PitEntity
         if(velocity.length > MAX_CHASE_SPEED) {
             velocity.normalize(MAX_CHASE_SPEED);
         }
-        moveBy(velocity.x * HXP.elapsed, velocity.y * HXP.elapsed, ["gladiator", "walls", "door"]);
+        moveBy(velocity.x * HXP.elapsed, velocity.y * HXP.elapsed, ["hazard", "walls"]);
     }
 
     override public function update() {
@@ -90,7 +87,7 @@ class Gladiator extends PitEntity
             if(phaseAge == 0) {
                 phaseTweener.tween(velocity, {x: 0, y: 0}, 2, Ease.sineInOut);
             }
-            moveBy(velocity.x * HXP.elapsed, velocity.y * HXP.elapsed, ["gladiator", "walls", "door"]);
+            moveBy(velocity.x * HXP.elapsed, velocity.y * HXP.elapsed, ["hazard", "walls"]);
         }
         else if(phase == 3) {
             if(phaseAge == 0) {
@@ -105,7 +102,7 @@ class Gladiator extends PitEntity
                 }, this);
             }
             velocity.normalize((1 - lungeCooldown.percent) * MAX_LUNGE_SPEED);
-            moveBy(velocity.x * HXP.elapsed, velocity.y * HXP.elapsed, ["gladiator", "walls"]);
+            moveBy(velocity.x * HXP.elapsed, velocity.y * HXP.elapsed, ["hazard", "walls"]);
         }
         else if(phase == 5) {
             var allReady = true;
@@ -123,7 +120,7 @@ class Gladiator extends PitEntity
         }
         else if(phase == 6) {
             velocity.normalize((1 - lungeCooldown.percent) * MAX_LUNGE_SPEED);
-            moveBy(velocity.x * HXP.elapsed, velocity.y * HXP.elapsed, ["gladiator", "walls"]);
+            moveBy(velocity.x * HXP.elapsed, velocity.y * HXP.elapsed, ["hazard", "walls"]);
         }
         else if(phase == 7) {
             if(phaseAge == 0) {
