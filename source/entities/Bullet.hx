@@ -29,9 +29,7 @@ class Bullet extends PitEntity
     }
 
     override public function update() {
-        for(i in 0...10) {
-            moveBy(velocity.x * HXP.elapsed, velocity.y * HXP.elapsed, ["walls"]);
-        }
+        moveBy(velocity.x * HXP.elapsed, velocity.y * HXP.elapsed, ["walls"]);
         super.update();
     }
 
