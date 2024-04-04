@@ -78,6 +78,12 @@ class Level extends Entity
                             )
                         ));
                     }
+                    if(entity.name == "key") {
+                        entities.push(new Key(entity.x, entity.y));
+                    }
+                    if(entity.name == "ghost") {
+                        entities.push(new Ghost(entity.x, entity.y));
+                    }
                 }
             }
         }

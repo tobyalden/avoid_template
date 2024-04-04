@@ -168,6 +168,21 @@
           "nodes": [
             {"x": 125, "y": 20}
           ]
+        },
+        {
+          "name": "door",
+          "id": 55,
+          "_eid": "42404373",
+          "x": 530,
+          "y": 70,
+          "width": 10,
+          "height": 40,
+          "originX": 0,
+          "originY": 0,
+          "nodes": [
+            {"x": 520, "y": 85}
+          ],
+          "values": {"name": "gauntlet-right", "destination": "ghostchamber", "destinationDoorName": "ghostchamber-left", "startsOpen": true}
         }
       ]
     },
