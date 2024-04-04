@@ -32,13 +32,21 @@
       "exportID": "42418946",
       "requiredTags": [],
       "excludedTags": []
+    },
+    {
+      "definition": "grid",
+      "name": "guide",
+      "gridSize": {"x": 180, "y": 180},
+      "exportID": "25512426",
+      "arrayMode": 0,
+      "legend": {"0": "#00000000", "1": "#00fd7cff"}
     }
   ],
   "entities": [
     {
       "exportID": "42404373",
       "name": "door",
-      "limit": 1,
+      "limit": 0,
       "size": {"x": 5, "y": 5},
       "origin": {"x": 0, "y": 0},
       "originAnchored": true,

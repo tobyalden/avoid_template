@@ -160,7 +160,12 @@ class Player extends PitEntity
         if(hasSword) {
             // Draw sword
             Draw.lineThickness = 3;
-            Draw.line(centerX, centerY, sword.x, sword.y);
+            Draw.line(
+                centerX - HXP.scene.camera.x,
+                centerY - HXP.scene.camera.y,
+                sword.x - HXP.scene.camera.x,
+                sword.y - HXP.scene.camera.y
+            );
         }
     }
 }

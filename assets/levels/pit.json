@@ -68,6 +68,18 @@
         {"name": "gladiator", "id": 10, "_eid": "96048241", "x": 130, "y": 130, "width": 10, "height": 10, "originX": 0, "originY": 0},
         {"name": "sword", "id": 11, "_eid": "17991586", "x": 140, "y": 30, "originX": 0, "originY": 0}
       ]
+    },
+    {
+      "name": "guide",
+      "_eid": "25512426",
+      "offsetX": 0,
+      "offsetY": 0,
+      "gridCellWidth": 180,
+      "gridCellHeight": 180,
+      "gridCellsX": 1,
+      "gridCellsY": 1,
+      "grid": ["0"],
+      "arrayMode": 0
     }
   ]
 }

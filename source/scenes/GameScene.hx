@@ -15,12 +15,15 @@ import openfl.Assets;
 
 class GameScene extends Scene
 {
+    public static inline var GAME_SIZE = 180;
+
     public static inline var GF_GLADIATORS_SLAIN = 0;
     public static inline var GF_IS_NOT_NEW_GAME = 1;
 
     public static var roomTitles:Map<String, String> = [
         "pit" => "THE PIT",
         "hallway" => "CORRIDOR",
+        "gauntlet" => "THE GAUNTLET",
     ];
 
     public static var totalTime:Float = 0;
@@ -53,7 +56,7 @@ class GameScene extends Scene
     private var entranceDoorName:String;
 
     public function new(
-        levelName:String = "pit",
+        levelName:String = "gauntlet",
         entranceDoorName:String = null,
     ) {
         super();
@@ -65,11 +68,9 @@ class GameScene extends Scene
         curtain = add(new Curtain());
         curtain.fadeOut(0.25);
 
-        addGraphic(new Image("graphics/background.png"));
-
         gladiators = [];
         level = add(new Level(levelName));
-        var playerStart:Vector2 = null;
+        var playerStart:Vector2 = new Vector2(GAME_SIZE / 2, GAME_SIZE / 2);
         for(entity in level.entities) {
             if(Type.getClass(entity) == Gladiator) {
                 if(hasGlobalFlag(GF_IS_NOT_NEW_GAME)) {
@@ -119,6 +120,11 @@ class GameScene extends Scene
         colorChanger.tween(0.25, 0xFF2000, 0xFFFB6E, Ease.sineInOut);
         addTween(colorChanger, true);
 
+        for(text in [titleDisplay, tutorialDisplay, scoreDisplay, replayPrompt]) {
+            text.scrollX = 0;
+            text.scrollY = 0;
+        }
+
         if(!hasGlobalFlag(GF_IS_NOT_NEW_GAME)) {
             totalTime = 0;
             highScore = Data.read("highscore", 0);
@@ -161,6 +167,9 @@ class GameScene extends Scene
         }
 
         super.update();
+
+        camera.x = MathUtil.clamp(player.centerX - GAME_SIZE / 2, level.x, level.width - GAME_SIZE);
+        camera.y = MathUtil.clamp(player.centerY - GAME_SIZE / 2, level.y, level.height - GAME_SIZE);
     }
 
     private function debug() {
