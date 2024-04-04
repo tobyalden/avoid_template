@@ -96,7 +96,7 @@ class Player extends PitEntity
             getSword();
         }
         var _door = collide("door", x, y);
-        if(_door != null) {
+        if(_door != null && _door.collidePoint(_door.x, _door.y, centerX, centerY)) {
             var door = cast(_door, Door);
             if(door.isOpen) {
                 cast(HXP.scene, GameScene).useDoor(door);
@@ -113,18 +113,6 @@ class Player extends PitEntity
     }
 
     public function updateSword() {
-        var oldSword = sword.clone();
-        var tappedWall = false;
-        while(swordCollide("walls")) {
-            tappedWall = true;
-            swordAngle += (rotatingClockwise ? 0.1 : -0.1);
-            var swordCalc = new Vector2(0, -SWORD_LENGTH);
-            swordCalc.rotate(swordAngle);
-            sword = new Vector2(centerX + swordCalc.x, centerY + swordCalc.y);
-        }
-        if(tappedWall) {
-            rotatingClockwise = !rotatingClockwise;
-        }
         var swordCalc = new Vector2(0, -SWORD_LENGTH);
         swordAngle += (
             HXP.elapsed * SWORD_ROTATION_SPEED * (rotatingClockwise ? -1: 1)

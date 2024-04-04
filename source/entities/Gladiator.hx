@@ -181,8 +181,7 @@ class Gladiator extends PitEntity
         }
 
         if(collidingWithSword()) {
-            HXP.scene.remove(this);
-            explode(10, 0.2, 2);
+            die();
         }
 
 
@@ -190,7 +189,13 @@ class Gladiator extends PitEntity
         phaseAge += 1;
     }
 
-    public function advancePhase() {
+    private function die() {
+        HXP.scene.remove(this);
+        getScene().gladiators.remove(this);
+        explode(10, 0.2, 2);
+    }
+
+    private function advancePhase() {
         phase += 1;
         phaseAge = 0;
     }

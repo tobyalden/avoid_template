@@ -11,16 +11,18 @@ import haxepunk.tweens.misc.*;
 import haxepunk.utils.*;
 import scenes.GameScene;
 
-class Door extends Entity
+class Door extends PitEntity
 {
     public var destination(default, null):String;
     public var isOpen(default, null):Bool;
 
-    public function new(x:Float, y:Float, width:Int, height:Int, destination:String
+    public function new(
+        x:Float, y:Float, width:Int, height:Int, destination:String,
+        name:String
     ) {
         super(x, y);
-        name = "door";
         this.destination = destination;
+        this.name = name;
         type = "walls";
         mask = new Hitbox(width, height);
         graphic = new ColoredRect(width, height, 0x00FFFF);
@@ -28,12 +30,22 @@ class Door extends Entity
     }
 
     public function open() {
+        if(isOpen) {
+            return;
+        }
         isOpen = true;
-        type = "door";
+        HXP.alarm(1, function() {
+            type = "door";
+        }, this);
     }
 
     override public function update() {
-        graphic.alpha = isOpen ? 0.1 : 1;
+        if(name == "gladiator") {
+            if(getScene().gladiators.length == 0) {
+                open();
+            }
+        }
+        graphic.alpha = type == "door" ? 0.1 : 1;
         super.update();
     }
 }

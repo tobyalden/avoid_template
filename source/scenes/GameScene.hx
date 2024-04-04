@@ -108,8 +108,8 @@ class GameScene extends Scene
 
     public function useDoor(door:Door) {
         pause();
-        curtain.fadeIn(2);
-        HXP.alarm(2, function() {
+        curtain.fadeIn(0.5);
+        HXP.alarm(0.5, function() {
             HXP.scene = new GameScene();
         });
     }

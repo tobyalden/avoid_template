@@ -56,7 +56,7 @@
           "height": 10,
           "originX": 0,
           "originY": 0,
-          "values": {"destination": "false"}
+          "values": {"destination": "false", "name": ""}
         }
       ]
     }
