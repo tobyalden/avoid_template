@@ -84,6 +84,9 @@ class Level extends Entity
                     if(entity.name == "ghost") {
                         entities.push(new Ghost(entity.x, entity.y));
                     }
+                    if(entity.name == "grave") {
+                        entities.push(new Grave(entity.x, entity.y));
+                    }
                 }
             }
         }

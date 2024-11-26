@@ -53,11 +53,6 @@ class Gladiator extends PitEntity
         phaseAge = 0;
     }
 
-    private function getVectorTowards(entity:Entity) {
-        var towardsEntity = new Vector2(entity.centerX - centerX, entity.centerY - centerY);
-        return towardsEntity;
-    }
-
     private function chasePlayer() {
         var towardsPlayer = getVectorTowards(getPlayer());
         towardsPlayer.normalize(ACCEL * HXP.elapsed);

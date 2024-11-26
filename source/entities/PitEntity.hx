@@ -11,7 +11,7 @@ import scenes.*;
 
 class PitEntity extends Entity
 {
-    public static var solids:Array<String> = ["walls"];
+    public static var solids:Array<String> = ["walls", "grave"];
 
     public function new(x:Float, y:Float) {
 	    super(x, y);
@@ -76,6 +76,11 @@ class PitEntity extends Entity
         return false;
     }
 
+    private function getVectorTowards(entity:Entity) {
+        var towardsEntity = new Vector2(entity.centerX - centerX, entity.centerY - centerY);
+        return towardsEntity;
+    }
+
     private function explode(
         numExplosions:Int,
         screenShakeDuration:Float,
@@ -110,5 +115,4 @@ class PitEntity extends Entity
             HXP.scene.camera.shake(screenShakeDuration, screenShakeMagnitude);
         }
     }
-
 }

@@ -96,6 +96,11 @@ class Player extends PitEntity
         if(collide("hazard", x, y) != null && ! Input.check("cheat")) {
             die();
         }
+        var key = collide("key", x, y);
+        if(key != null) {
+            GameScene.addGlobalFlag(GameScene.GF_PICKED_UP_KEY);
+            HXP.scene.remove(key);
+        }
         //if(collide("sworditem", x, y) != null) {
             //HXP.scene.remove(HXP.scene.getInstance("sworditem"));
             //getSword();

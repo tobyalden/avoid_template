@@ -19,6 +19,8 @@ class GameScene extends Scene
 
     public static inline var GF_GLADIATORS_SLAIN = 0;
     public static inline var GF_IS_NOT_NEW_GAME = 1;
+    public static inline var GF_PICKED_UP_KEY = 2;
+    public static inline var GF_GHOST_LAID_TO_REST = 3;
 
     public static var roomTitles:Map<String, String> = [
         "pit" => "THE PIT",
@@ -28,7 +30,8 @@ class GameScene extends Scene
 
     public static var totalTime:Float = 0;
     public static var highScore:Float = 0;
-    public static var globalFlags:Array<Int> = [GF_IS_NOT_NEW_GAME];
+    public static var globalFlags:Array<Int> = [GF_IS_NOT_NEW_GAME, GF_PICKED_UP_KEY];
+    // TODO: Reset global flags on death
 
     public static function addGlobalFlag(addFlag:Int) {
         if(hasGlobalFlag(addFlag)) {
@@ -56,7 +59,7 @@ class GameScene extends Scene
     private var entranceDoorName:String;
 
     public function new(
-        levelName:String = "gauntlet",
+        levelName:String = "hallway",
         entranceDoorName:String = null,
     ) {
         super();
@@ -70,7 +73,7 @@ class GameScene extends Scene
 
         gladiators = [];
         level = add(new Level(levelName));
-        var playerStart:Vector2 = new Vector2(GAME_SIZE / 2, GAME_SIZE / 2);
+        var playerStart:Vector2 = new Vector2(GAME_SIZE / 2 + 50, GAME_SIZE / 2);
         for(entity in level.entities) {
             if(Type.getClass(entity) == Gladiator) {
                 if(hasGlobalFlag(GF_IS_NOT_NEW_GAME)) {

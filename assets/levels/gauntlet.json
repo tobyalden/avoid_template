@@ -183,7 +183,8 @@
             {"x": 520, "y": 85}
           ],
           "values": {"name": "gauntlet-right", "destination": "ghostchamber", "destinationDoorName": "ghostchamber-left", "startsOpen": true}
-        }
+        },
+        {"name": "ghost", "id": 56, "_eid": "26731229", "x": 500, "y": 45, "originX": 0, "originY": 0}
       ]
     },
     {

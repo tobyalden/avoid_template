@@ -10,15 +10,16 @@ import haxepunk.tweens.misc.*;
 import haxepunk.utils.*;
 import scenes.*;
 
-class Key extends PitEntity
+class Grave extends PitEntity
 {
     private var sprite:Image;
 
     public function new(x:Float, y:Float) {
         super(x, y);
-        type = "key";
-        mask = new Hitbox(10, 10);
-        sprite = new Image("graphics/key.png");
+        name = "grave";
+        type = "grave";
+        mask = new Hitbox(20, 20);
+        sprite = new Image("graphics/grave.png");
         graphic = sprite;
     }
 

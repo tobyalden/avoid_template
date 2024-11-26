@@ -15,7 +15,7 @@
       "gridCellsX": 18,
       "gridCellsY": 18,
       "grid2D": [
-        ["1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1"],
+        ["1", "1", "1", "1", "1", "1", "1", "0", "0", "0", "0", "1", "1", "1", "1", "1", "1", "1"],
         ["1", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "1"],
         ["1", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "1"],
         ["1", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "1"],
@@ -75,6 +75,23 @@
             {"x": 160, "y": 85}
           ],
           "values": {"name": "hallway-right", "destination": "gauntlet", "destinationDoorName": "gauntlet-left", "startsOpen": true}
+        },
+        {"name": "ghost", "id": 4, "_eid": "26731229", "x": 140, "y": 45, "originX": 0, "originY": 0},
+        {"name": "grave", "id": 5, "_eid": "64345949", "x": 80, "y": 80, "originX": 0, "originY": 0},
+        {
+          "name": "door",
+          "id": 6,
+          "_eid": "42404373",
+          "x": 70,
+          "y": 0,
+          "width": 40,
+          "height": 10,
+          "originX": 0,
+          "originY": 0,
+          "nodes": [
+            {"x": 85, "y": 10}
+          ],
+          "values": {"name": "hallway-top", "destination": "anteroom", "destinationDoorName": "anteroom-bottom", "startsOpen": false}
         }
       ]
     },

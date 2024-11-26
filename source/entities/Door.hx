@@ -62,6 +62,11 @@ class Door extends PitEntity
                 open();
             }
         }
+        if(name == "hallway-top") {
+            if(GameScene.hasGlobalFlag(GameScene.GF_GHOST_LAID_TO_REST)) {
+                open();
+            }
+        }
         graphic.alpha = type == "door" ? 0.1 : 1;
         super.update();
     }
