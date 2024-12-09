@@ -15,11 +15,16 @@ import openfl.Assets;
 
 class GameScene extends Scene
 {
+    public static inline var GAME_WIDTH = 240;
+    public static inline var GAME_HEIGHT = 240;
+
     public static var totalTime:Float = 0;
     public static var highScore:Float;
 
     public var curtain(default, null):Curtain;
+    public var isStarted(default, null):Bool;
     private var player:Player;
+    private var level:Level;
     private var scoreDisplay:Text;
     private var titleDisplay:Text;
     private var tutorialDisplay:Text;
@@ -37,14 +42,18 @@ class GameScene extends Scene
 
         addGraphic(new Image("graphics/background.png"));
 
-        player = add(new Player(HXP.width / 2, HXP.height / 2));
+        level = add(new Level("level"));
+        for(entity in level.entities) {
+            if(Type.getClass(entity) == Player) {
+                player = cast(entity, Player);
+            }
+            add(entity);
+        }
 
-        add(new Hazard(HXP.width / 4, HXP.height / 4));
-
-        scoreDisplay = new Text("0", 0, 0, 180, 0);
+        scoreDisplay = new Text("0", 0, 0, GAME_WIDTH, 0);
         scoreDisplay.alpha = 0;
-        titleDisplay = new Text("TITLE", 0, 58, 180, 0, {align: TextAlignType.CENTER});
-        tutorialDisplay = new Text("explain controls here", 0, 103, 180, 0, {align: TextAlignType.CENTER, size: 12});
+        titleDisplay = new Text("TITLE", 0, 58, GAME_WIDTH, 0, {align: TextAlignType.CENTER});
+        tutorialDisplay = new Text("explain controls here", 0, 103, GAME_WIDTH, 0, {align: TextAlignType.CENTER, size: 12});
         for(display in [scoreDisplay, titleDisplay, tutorialDisplay]) {
             addGraphic(display);
         }
@@ -63,6 +72,10 @@ class GameScene extends Scene
     }
 
     override public function update() {
+        if(Key.pressed(Key.P)) {
+            HXP.scene = new GameScene();
+        }
+
         if(player.isDead) {
             if(Input.pressed("reset") && canReset) {
                 reset();
@@ -94,11 +107,13 @@ class GameScene extends Scene
         for(display in [titleDisplay, tutorialDisplay]) {
             HXP.tween(display, {"alpha": 0}, 0.5);
         }
+        for(entity in level.entities) {
+            entity.active = true;
+        }
     }
 
     public function onDeath() {
-        HXP.tween(scoreDisplay, {"y": HXP.height / 2 - scoreDisplay.height / 2, "alpha": 1}, 1.5, {ease: Ease.sineInOut, complete: function() {
-            scoreDisplay.text = '${timeRound(totalTime, 2)}\n  SECONDS';
+        HXP.tween(scoreDisplay, {"y": HXP.height / 2 - scoreDisplay.height / 2, "alpha": 1}, 0.75, {ease: Ease.sineInOut, complete: function() { scoreDisplay.text = '${timeRound(totalTime, 2)}\n  SECONDS';
             if(totalTime > highScore) {
                 replayPrompt.alpha = 1;
                 Main.sfx["beatrecord"].play();

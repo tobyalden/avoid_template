@@ -11,7 +11,7 @@ import scenes.*;
 
 class Player extends Entity
 {
-    public static inline var SPEED = 100;
+    public static inline var SPEED = 150;
 
     public var hasMoved(default, null):Bool;
     public var isDead(default, null):Bool;
@@ -71,7 +71,7 @@ class Player extends Entity
         velocity = heading;
         velocity.normalize(SPEED);
 
-        moveBy(velocity.x * HXP.elapsed, velocity.y * HXP.elapsed);
+        moveBy(velocity.x * HXP.elapsed, velocity.y * HXP.elapsed, ["walls"]);
 
         if(collide("hazard", x, y) != null) {
             die();

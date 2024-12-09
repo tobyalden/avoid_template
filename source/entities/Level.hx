@@ -46,6 +46,22 @@ class Level extends Entity
                     if(entity.name == "player") {
                         entities.push(new Player(entity.x, entity.y));
                     }
+                    if(entity.name == "hazard") {
+                        entities.push(new Hazard(entity.x, entity.y));
+                    }
+                    if(entity.name == "optionalWall") {
+                        if(Random.random < 0.5) {
+                            for(tileX in 0...Std.int(entity.width / walls.tileWidth)) {
+                                for(tileY in 0...Std.int(entity.height / walls.tileHeight)) {
+                                    walls.setTile(
+                                        Std.int(entity.x / walls.tileWidth) + tileX,
+                                        Std.int(entity.y / walls.tileHeight) + tileY,
+                                        true
+                                    );
+                                }
+                            }
+                        }
+                    }
                 }
             }
         }
