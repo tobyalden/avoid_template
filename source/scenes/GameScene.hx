@@ -41,7 +41,7 @@ class GameScene extends Scene
         curtain = add(new Curtain());
         curtain.fadeOut(0.25);
 
-        addGraphic(new Image("graphics/background.png"));
+        addGraphic(new Image("graphics/background.png"), 100);
 
         level = add(new Level("level"));
         for(entity in level.entities) {

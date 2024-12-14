@@ -54,6 +54,7 @@ class Player extends Entity
             return;
         }
 
+        var oldAngle = angle;
         if(Input.check("left")) {
             angle += TURN_SPEED * HXP.elapsed;
         }
@@ -90,6 +91,10 @@ class Player extends Entity
         }
 
         super.update();
+
+        if(angle != oldAngle) {
+            HXP.scene.add(new Skid(centerX, centerY, angle));
+        }
     }
 
     public function die() {
