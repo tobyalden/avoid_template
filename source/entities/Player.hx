@@ -9,8 +9,6 @@ import haxepunk.Tween;
 import haxepunk.tweens.misc.*;
 import scenes.*;
 
-// TODO: Maybe car movement but fixed forward momentum?
-
 class Player extends Entity
 {
     public static inline var INITIAL_MAX_SPEED = 120;
@@ -26,6 +24,7 @@ class Player extends Entity
 
     public function new(x:Float, y:Float) {
         super(x, y);
+        name = "player";
         mask = new Hitbox(10, 10);
         sprite = new Image("graphics/player.png");
         sprite.centerOrigin();
@@ -44,13 +43,11 @@ class Player extends Entity
             return;
         }
 
-        for(input in ["left", "right", "up", "down"]) {
-            if(Input.check(input)) {
-                if(!hasMoved) {
-                    cast(HXP.scene, GameScene).onStart();
-                }
-                hasMoved = true;
+        if(Input.pressed("reset")) {
+            if(!hasMoved) {
+                cast(HXP.scene, GameScene).onStart();
             }
+            hasMoved = true;
         }
 
         if(!hasMoved) {

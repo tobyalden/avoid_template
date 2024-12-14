@@ -15,7 +15,7 @@ class Level extends Entity
 
     public function new(levelName:String) {
         super(0, 0);
-        type = "walls";
+        type = "hazard";
         loadLevel(levelName);
         updateGraphic();
         mask = walls;

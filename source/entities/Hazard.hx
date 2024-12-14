@@ -32,6 +32,9 @@ class Hazard extends Entity
     override public function update() {
         moveBy(velocity.x * HXP.elapsed, velocity.y * HXP.elapsed);
         super.update();
+        if(x > 540 || y > 540 || x < -10 || y < -10) {
+            HXP.scene.remove(this);
+        }
     }
 }
 

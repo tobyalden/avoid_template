@@ -26,11 +26,9 @@ class Main extends Engine
         HXP.screen.scaleMode = new UniformScaleMode(UniformScaleType.Expand);
         HXP.fullscreen = false;
 
-        Key.define("up", [Key.W, Key.UP]);
-        Key.define("down", [Key.S, Key.DOWN]);
         Key.define("left", [Key.A, Key.LEFT]);
         Key.define("right", [Key.D, Key.RIGHT]);
-        Key.define("reset", [Key.W, Key.UP, Key.SPACE, Key.ENTER]);
+        Key.define("reset", [Key.A, Key.D, Key.LEFT, Key.RIGHT, Key.SPACE, Key.ENTER]);
 
         if(Gamepad.gamepad(0) != null) {
             defineGamepadInputs(Gamepad.gamepad(0));

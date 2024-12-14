@@ -15,9 +15,9 @@ import openfl.Assets;
 
 class GameScene extends Scene
 {
-    public static inline var INITIAL_SPAWN_INTERVAL = 1;
-    public static inline var FINAL_SPAWN_INTERVAL = 0.25;
-    public static inline var TIME_TO_MAX_DIFFICULTY = 60;
+    public static inline var INITIAL_SPAWN_INTERVAL = 0.5;
+    public static inline var FINAL_SPAWN_INTERVAL = 0.2;
+    public static inline var TIME_TO_MAX_DIFFICULTY = 45;
 
     public static var totalTime:Float = 0;
     public static var highScore:Float;
@@ -27,11 +27,11 @@ class GameScene extends Scene
     private var player:Player;
     private var scoreDisplay:Text;
     private var titleDisplay:Text;
-    private var tutorialDisplay:Text;
     private var replayPrompt:Text;
     private var colorChanger:ColorTween;
     private var canReset:Bool;
     private var spawner:Alarm;
+    private var level:Level;
 
     override public function begin() {
         Data.load(Main.SAVE_FILE_NAME);
@@ -43,13 +43,19 @@ class GameScene extends Scene
 
         addGraphic(new Image("graphics/background.png"));
 
-        player = add(new Player(HXP.width / 2, HXP.height / 2));
+        level = add(new Level("level"));
+        for(entity in level.entities) {
+            if(entity.name == "player") {
+                player = cast(entity, Player);
+            }
+            add(entity);
+        }
 
-        scoreDisplay = new Text("0", 0, 0, 180, 0);
+        scoreDisplay = new Text("0", 0, 0, 540, 0);
         scoreDisplay.alpha = 0;
-        titleDisplay = new Text("TITLE", 0, 58, 180, 0, {align: TextAlignType.CENTER});
-        tutorialDisplay = new Text("explain controls here", 0, 103, 180, 0, {align: TextAlignType.CENTER, size: 12});
-        for(display in [scoreDisplay, titleDisplay, tutorialDisplay]) {
+        titleDisplay = new Text("DRIVING SCHOOL\n\n\n\npress left or right", 0, 0, 540, 0, {align: TextAlignType.CENTER});
+        titleDisplay.y = 540 / 2 - titleDisplay.height / 2 - 5;
+        for(display in [scoreDisplay, titleDisplay]) {
             addGraphic(display);
         }
 
@@ -151,7 +157,7 @@ class GameScene extends Scene
 
     public function onStart() {
         HXP.tween(scoreDisplay, {"alpha": highScore > 0 ? 0.5 : 1}, 0.5);
-        for(display in [titleDisplay, tutorialDisplay]) {
+        for(display in [titleDisplay]) {
             HXP.tween(display, {"alpha": 0}, 0.5);
         }
         spawner.start();
