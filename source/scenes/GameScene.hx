@@ -33,6 +33,8 @@ class GameScene extends Scene
     private var spawner:Alarm;
     private var level:Level;
 
+    // TODO: At 60 seconds, big red car appears. Moves like you, chases you, squishes cones (allows you to drive through them). Will probably need to bring up FINAL_SPAWN_INTERVAL a sconch.
+
     override public function begin() {
         Data.load(Main.SAVE_FILE_NAME);
         totalTime = 0;
