@@ -35,6 +35,8 @@ class GameScene extends Scene
 
     // TODO: At 60 seconds, big red car appears. Moves like you, chases you, squishes cones (allows you to drive through them). Will probably need to bring up FINAL_SPAWN_INTERVAL a sconch.
 
+    // TODO: Generate names for pieces
+
     override public function begin() {
         Data.load(Main.SAVE_FILE_NAME);
         totalTime = 0;
@@ -55,7 +57,7 @@ class GameScene extends Scene
 
         scoreDisplay = new Text("0", 0, 0, 540, 0);
         scoreDisplay.alpha = 0;
-        titleDisplay = new Text("DRIVING SCHOOL\n\n\n\npress left or right", 0, 0, 540, 0, {align: TextAlignType.CENTER});
+        titleDisplay = new Text("CAR ARTIST\n\n\n\npress left or right", 0, 0, 540, 0, {align: TextAlignType.CENTER});
         titleDisplay.y = 540 / 2 - titleDisplay.height / 2 - 5;
         for(display in [scoreDisplay, titleDisplay]) {
             addGraphic(display);
@@ -166,8 +168,9 @@ class GameScene extends Scene
     }
 
     public function onDeath() {
+        spawner.active = false;
         HXP.tween(scoreDisplay, {"y": HXP.height / 2 - scoreDisplay.height / 2, "alpha": 1}, 1.5, {ease: Ease.sineInOut, complete: function() {
-            scoreDisplay.text = '${timeRound(totalTime, 2)}\n  SECONDS';
+            scoreDisplay.text = '${timeRound(totalTime, 2)} SECONDS';
             if(totalTime > highScore) {
                 replayPrompt.alpha = 1;
                 Main.sfx["beatrecord"].play();
@@ -186,6 +189,14 @@ class GameScene extends Scene
                     }}
                 );
             }
+            HXP.alarm(2, function() {
+                HXP.tween(
+                    scoreDisplay,
+                    {"x": HXP.width - scoreDisplay.textWidth - 10, "y": HXP.height - scoreDisplay.textHeight - 10},
+                    1.9,
+                    {ease: Ease.sineInOut}
+                );
+            });
         }});
         if(totalTime > highScore) {
             Data.write("highscore", totalTime);
