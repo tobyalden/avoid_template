@@ -60,7 +60,7 @@ class GameScene extends Scene
 
     public function new(
         levelName:String = "hallway",
-        entranceDoorName:String = null,
+        entranceDoorName:String = null
     ) {
         super();
         this.levelName = levelName;
