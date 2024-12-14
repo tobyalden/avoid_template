@@ -77,6 +77,11 @@ class Player extends Entity
             FINAL_MAX_SPEED,
             cast(HXP.scene, GameScene).difficultyIncreaser.percent
         );
+
+        if(angle != oldAngle) {
+            maxSpeed *= 0.9;
+        }
+
         speed = MathUtil.clamp(speed, -maxSpeed, maxSpeed);
 
         var velocity = new Vector2();
