@@ -94,6 +94,13 @@ class Player extends Entity
 
         if(angle != oldAngle) {
             HXP.scene.add(new Skid(centerX, centerY, angle));
+            var dustVelocity = velocity.clone();
+            dustVelocity.scale(0.0009);
+            dustVelocity.inverse();
+            dustVelocity.rotate(Math.PI / 2 * (Math.random() - 0.5));
+            HXP.scene.add(new Particle(
+                centerX, centerY, dustVelocity, 0.25, 1
+            ));
         }
     }
 
