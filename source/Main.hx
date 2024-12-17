@@ -42,13 +42,13 @@ class Main extends Engine
             "didntbeatrecord" => new Sfx("audio/didntbeatrecord.ogg"),
             "reset" => new Sfx("audio/reset.ogg"),
             "bell" => new Sfx("audio/bell.ogg"),
-            "crash" => new Sfx("audio/crash.wav"),
-            "screech" => new Sfx("audio/screech.wav"),
-            "cone1" => new Sfx("audio/cone1.wav"),
-            "cone2" => new Sfx("audio/cone2.wav"),
-            "cone3" => new Sfx("audio/cone3.wav"),
-            "cone4" => new Sfx("audio/cone4.wav"),
-            "honk" => new Sfx("audio/honk.wav"),
+            "crash" => new Sfx("audio/crash.ogg"),
+            "screech" => new Sfx("audio/screech.ogg"),
+            "cone1" => new Sfx("audio/cone1.ogg"),
+            "cone2" => new Sfx("audio/cone2.ogg"),
+            "cone3" => new Sfx("audio/cone3.ogg"),
+            "cone4" => new Sfx("audio/cone4.ogg"),
+            "honk" => new Sfx("audio/honk.ogg"),
         ];
 
         HXP.scene = new GameScene();
