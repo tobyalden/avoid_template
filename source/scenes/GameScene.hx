@@ -13,7 +13,7 @@ import haxepunk.tweens.misc.*;
 import haxepunk.utils.*;
 import openfl.Assets;
 
-// TODO: Big cars knock over cones (switch from tiles to entities), pushing them and crushing them
+// TODO: Add sfx for "honk honk!" big car arrival and cones getting knocked over
 
 class GameScene extends Scene
 {
