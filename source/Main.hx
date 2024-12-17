@@ -42,7 +42,8 @@ class Main extends Engine
             "didntbeatrecord" => new Sfx("audio/didntbeatrecord.ogg"),
             "reset" => new Sfx("audio/reset.ogg"),
             "bell" => new Sfx("audio/bell.ogg"),
-            "die" => new Sfx("audio/die.ogg")
+            "crash" => new Sfx("audio/crash.wav"),
+            "screech" => new Sfx("audio/screech.wav")
         ];
 
         HXP.scene = new GameScene();

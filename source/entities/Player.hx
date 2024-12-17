@@ -46,6 +46,7 @@ class Player extends Entity
         if(Input.pressed("reset")) {
             if(!hasMoved) {
                 cast(HXP.scene, GameScene).onStart();
+                Main.sfx["screech"].loop(0);
             }
             hasMoved = true;
         }
@@ -95,25 +96,38 @@ class Player extends Entity
             die();
         }
 
-        super.update();
-
         if(angle != oldAngle) {
+            Main.sfx["screech"].volume = MathUtil.approach(
+                Main.sfx["screech"].volume,
+                0.25,
+                HXP.elapsed * 1.5
+            );
             HXP.scene.add(new Skid(centerX, centerY, angle));
-            var dustVelocity = velocity.clone();
-            dustVelocity.scale(0.0009);
-            dustVelocity.inverse();
-            dustVelocity.rotate(Math.PI / 2 * (Math.random() - 0.5));
-            HXP.scene.add(new Particle(
-                centerX, centerY, dustVelocity, 0.25, 1
-            ));
+            //var dustVelocity = velocity.clone();
+            //dustVelocity.scale(0.0009);
+            //dustVelocity.inverse();
+            //dustVelocity.rotate(Math.PI / 2 * (Math.random() - 0.5));
+            //HXP.scene.add(new Particle(
+                //centerX, centerY, dustVelocity, 0.25, 1
+            //));
         }
+        else {
+            Main.sfx["screech"].volume = MathUtil.approach(
+                Main.sfx["screech"].volume,
+                0,
+                HXP.elapsed * 2
+            );
+        }
+
+        super.update();
     }
 
     public function die() {
         isDead = true;
         visible = false;
         explode();
-        Main.sfx["die"].play();
+        Main.sfx["crash"].play();
+        Main.sfx["screech"].stop();
         cast(HXP.scene, GameScene).onDeath();
     }
 
