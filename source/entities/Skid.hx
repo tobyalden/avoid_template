@@ -14,11 +14,12 @@ class Skid extends Entity
     public var sprite:Image;
     private var fader:VarTween;
 
-    public function new(x:Float, y:Float, angle:Float) {
+    public function new(x:Float, y:Float, angle:Float, scale:Float) {
         super(x, y);
         sprite = new Image("graphics/skid.png");
         sprite.centerOrigin();
         sprite.angle = angle;
+        sprite.scale = scale;
         graphic = sprite;
         layer = 10;
         fader = new VarTween();

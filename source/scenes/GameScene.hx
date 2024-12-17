@@ -15,15 +15,20 @@ import openfl.Assets;
 
 class GameScene extends Scene
 {
-    public static inline var INITIAL_SPAWN_INTERVAL = 0.5;
+    public static inline var INITIAL_SPAWN_INTERVAL = 0.6;
     public static inline var FINAL_SPAWN_INTERVAL = 0.2;
-    public static inline var TIME_TO_MAX_DIFFICULTY = 45;
+    //public static inline var TIME_TO_MAX_DIFFICULTY = 5;
+    //public static inline var TIME_TO_MAX_SPEED = 5;
+    public static inline var TIME_TO_MAX_DIFFICULTY = 30;
+    public static inline var TIME_TO_MAX_SPEED = 30;
+    public static inline var BIG_HAZARD_SPAWN_TIME_OFFSET = 5;
 
     public static var totalTime:Float = 0;
     public static var highScore:Float;
 
     public var curtain(default, null):Curtain;
     public var difficultyIncreaser(default, null):Alarm;
+    public var speedIncreaser(default, null):Alarm;
     private var player:Player;
     private var scoreDisplay:Text;
     private var titleDisplay:Text;
@@ -31,11 +36,8 @@ class GameScene extends Scene
     private var colorChanger:ColorTween;
     private var canReset:Bool;
     private var spawner:Alarm;
+    private var bigSpawner:Alarm;
     private var level:Level;
-
-    // TODO: At 60 seconds, big red car appears. Moves like you, chases you, squishes cones (allows you to drive through them). Will probably need to bring up FINAL_SPAWN_INTERVAL a sconch.
-
-    // TODO: Generate names for pieces
 
     override public function begin() {
         Data.load(Main.SAVE_FILE_NAME);
@@ -75,7 +77,7 @@ class GameScene extends Scene
 
         canReset = false;
         spawner = new Alarm(INITIAL_SPAWN_INTERVAL, function() {
-            spawnHazard(HXP.choose(false, false, false, true));
+            spawnHazard(HXP.choose(false, false, false, true), false);
             var resetTo = MathUtil.lerp(
                 INITIAL_SPAWN_INTERVAL,
                 FINAL_SPAWN_INTERVAL,
@@ -84,49 +86,81 @@ class GameScene extends Scene
             spawner.reset(resetTo);
         }, TweenType.Looping);
         addTween(spawner);
-        difficultyIncreaser = new Alarm(TIME_TO_MAX_DIFFICULTY);
-        addTween(difficultyIncreaser, true);
+
+        bigSpawner = new Alarm(BIG_HAZARD_SPAWN_TIME_OFFSET, function() {
+            spawnHazard(true, true);
+        });
+        addTween(bigSpawner);
+
+        difficultyIncreaser = new Alarm(
+            TIME_TO_MAX_DIFFICULTY, TweenType.Looping
+        );
+        difficultyIncreaser.onComplete.bind(function() {
+            bigSpawner.start();
+        });
+        addTween(difficultyIncreaser);
+
+        speedIncreaser = new Alarm(TIME_TO_MAX_SPEED);
+        addTween(speedIncreaser);
     }
 
-    private function spawnHazard(targetPlayer:Bool) {
+    private function spawnHazard(targetPlayer:Bool, isBig:Bool) {
         var direction = HXP.choose("top", "bottom", "left", "right");
+        var offset = isBig ? 20 : 10;
         if(direction == "top") {
-            var hazard = new Hazard(0, 0, new Vector2(0, 1));
+            var hazard:Entity = (
+                isBig
+                ? new BigHazard(0, 0)
+                : new Hazard(0, 0, new Vector2(0, 1))
+            );
             if(targetPlayer) {
-                hazard.moveTo(player.x, -10);
+                hazard.moveTo(player.x, -offset);
             }
             else {
-                hazard.moveTo(Random.random * (HXP.width - 10), -10);
+                hazard.moveTo(Random.random * (HXP.width - offset), -offset);
             }
             add(hazard);
         }
         else if(direction == "bottom") {
-            var hazard = new Hazard(0, 0, new Vector2(0, -1));
+            var hazard:Entity = (
+                isBig
+                ? new BigHazard(0, 0)
+                : new Hazard(0, 0, new Vector2(0, -1))
+            );
             if(targetPlayer) {
                 hazard.moveTo(player.x, HXP.height);
             }
             else {
-                hazard.moveTo(Random.random * (HXP.width - 10), HXP.height);
+                hazard.moveTo(Random.random * (HXP.width - offset), HXP.height);
             }
             add(hazard);
         }
         else if(direction == "left") {
             var hazard = new Hazard(0, 0, new Vector2(1, 0));
+            var hazard:Entity = (
+                isBig
+                ? new BigHazard(0, 0)
+                : new Hazard(0, 0, new Vector2(1, 0))
+            );
             if(targetPlayer) {
-                hazard.moveTo(-10, player.y);
+                hazard.moveTo(-offset, player.y);
             }
             else {
-                hazard.moveTo(-10, Random.random * (HXP.height - 10));
+                hazard.moveTo(-offset, Random.random * (HXP.height - offset));
             }
             add(hazard);
         }
         else if(direction == "right") {
-            var hazard = new Hazard(0, 0, new Vector2(-1, 0));
+            var hazard:Entity = (
+                isBig
+                ? new BigHazard(0, 0)
+                : new Hazard(0, 0, new Vector2(-1, 0))
+            );
             if(targetPlayer) {
                 hazard.moveTo(HXP.width, player.y);
             }
             else {
-                hazard.moveTo(HXP.width, Random.random * (HXP.height - 10));
+                hazard.moveTo(HXP.width, Random.random * (HXP.height - offset));
             }
             add(hazard);
         }
@@ -165,10 +199,20 @@ class GameScene extends Scene
             HXP.tween(display, {"alpha": 0}, 0.5);
         }
         spawner.start();
+        difficultyIncreaser.start();
+        speedIncreaser.start();
+    }
+
+    private function stopTweens() {
+        for(tween in [
+            spawner, bigSpawner, difficultyIncreaser, speedIncreaser
+        ]) {
+            tween.active = false;
+        }
     }
 
     public function onDeath() {
-        spawner.active = false;
+        stopTweens();
         HXP.tween(scoreDisplay, {"y": HXP.height / 2 - scoreDisplay.height / 2, "alpha": 1}, 1.5, {ease: Ease.sineInOut, complete: function() {
             scoreDisplay.text = '${timeRound(totalTime, 2)} SECONDS';
             if(totalTime > highScore) {

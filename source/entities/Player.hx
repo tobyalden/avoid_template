@@ -25,13 +25,12 @@ class Player extends Entity
     public function new(x:Float, y:Float) {
         super(x, y);
         name = "player";
-        mask = new Hitbox(10, 10);
+        mask = new Circle(5);
         sprite = new Image("graphics/player.png");
         sprite.centerOrigin();
         sprite.x += width / 2;
         sprite.y += height / 2;
         graphic = sprite;
-        //velocity = new Vector2();
         angle = 90;
         speed = 0;
         hasMoved = false;
@@ -63,20 +62,12 @@ class Player extends Entity
             angle -= TURN_SPEED * HXP.elapsed;
         }
 
-        //if(Input.check("up")) {
-            speed += ACCEL * HXP.elapsed;
-        //}
-        //else if(Input.check("down")) {
-            //speed -= ACCEL * HXP.elapsed;
-        //}
-        //else {
-            //speed = MathUtil.approach(speed, 0, ACCEL * HXP.elapsed);
-        //}
+        speed += ACCEL * HXP.elapsed;
 
         var maxSpeed = MathUtil.lerp(
             INITIAL_MAX_SPEED,
             FINAL_MAX_SPEED,
-            cast(HXP.scene, GameScene).difficultyIncreaser.percent
+            cast(HXP.scene, GameScene).speedIncreaser.percent
         );
 
         if(angle != oldAngle) {
@@ -102,7 +93,7 @@ class Player extends Entity
                 0.25,
                 HXP.elapsed * 1.5
             );
-            HXP.scene.add(new Skid(centerX, centerY, angle));
+            HXP.scene.add(new Skid(centerX, centerY, angle, 1));
             //var dustVelocity = velocity.clone();
             //dustVelocity.scale(0.0009);
             //dustVelocity.inverse();
