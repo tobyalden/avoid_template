@@ -47,13 +47,6 @@
 	<div id="openfl-content"></div>
 
 	<script type="text/javascript">
-        window.addEventListener("keydown", function(e) {
-            // space and arrow keys
-            if([32, 37, 38, 39, 40].indexOf(e.keyCode) > -1) {
-                e.preventDefault();
-            }
-        }, false);
-
         HTMLCanvasElement.prototype.getContext = function(origFn) { return function(type, attribs) { attribs = attribs || {}; attribs.preserveDrawingBuffer = true; return origFn.call(this, type, attribs); }; }(HTMLCanvasElement.prototype.getContext);
 
         function getScreenShot() {
@@ -72,11 +65,14 @@
           downloadLink.click();
         }
 
-        document.addEventListener('keydown', (event) => {k
+        document.addEventListener('keydown', (event) => {
           if (event.key === 'p') {
             // Perform your desired action here
             setTimeout(getScreenShot, 1/60*1000*5);
           }
+					else if([32, 37, 38, 39, 40].indexOf(event.keyCode) > -1) {
+							event.preventDefault();
+					}
         });
 
 		lime.embed ("Main", "openfl-content", 540, 540, { parameters: {} });

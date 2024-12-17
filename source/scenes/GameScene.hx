@@ -46,6 +46,8 @@ class GameScene extends Scene
     private var bigSpawner:Alarm;
     private var level:Level;
 
+    private var canTakeScreenshot:Bool;
+
     override public function begin() {
         Data.load(Main.SAVE_FILE_NAME);
         totalTime = 0;
@@ -55,6 +57,8 @@ class GameScene extends Scene
         curtain.fadeOut(0.25);
 
         addGraphic(new Image("graphics/background.png"), 100);
+
+        canTakeScreenshot = false;
 
         level = add(new Level("level"));
         for(entity in level.entities) {
@@ -179,8 +183,9 @@ class GameScene extends Scene
     }
 
     override public function update() {
-        if(Input.pressed("screenshot")) {
+        if(Input.pressed("screenshot") && canTakeScreenshot) {
             screenshotPrompt.visible = false;
+            Main.sfx["camera"].play(0.5);
         }
         if(player.isDead) {
             if(Input.pressed("reset") && canReset) {
@@ -248,18 +253,17 @@ class GameScene extends Scene
                     }}
                 );
             }
-            HXP.alarm(2, function() {
+            HXP.alarm(1, function() {
                 HXP.tween(
                     scoreDisplay,
                     {"x": HXP.width - scoreDisplay.textWidth - 46, "y": HXP.height - scoreDisplay.textHeight - 10},
-                    1.9,
+                    1,
                     {ease: Ease.sineInOut}
                 );
-                HXP.tween(screenshotPrompt,
-                    {"alpha": 1},
-                    1.9,
-                    {ease: Ease.sineInOut}
-                );
+                HXP.alarm(1, function() {
+                    screenshotPrompt.alpha = 1;
+                    canTakeScreenshot = true;
+                });
             });
         }});
         if(totalTime > highScore) {

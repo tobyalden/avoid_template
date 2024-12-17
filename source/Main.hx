@@ -50,6 +50,7 @@ class Main extends Engine
             "cone3" => new Sfx("audio/cone3.ogg"),
             "cone4" => new Sfx("audio/cone4.ogg"),
             "honk" => new Sfx("audio/honk.ogg"),
+            "camera" => new Sfx("audio/camera.ogg")
         ];
 
         HXP.scene = new GameScene();
