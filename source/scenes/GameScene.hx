@@ -14,17 +14,20 @@ import haxepunk.utils.*;
 import openfl.Assets;
 
 // TODO: Add sfx for "honk honk!" big car arrival and cones getting knocked over
+// TODO: Oggify sfx
 
 class GameScene extends Scene
 {
     public static inline var INITIAL_SPAWN_INTERVAL = 0.6;
     public static inline var FINAL_SPAWN_INTERVAL = 0.2;
-    public static inline var TIME_TO_MAX_DIFFICULTY = 1;
-    public static inline var TIME_TO_MAX_SPEED = 1;
-    public static inline var BIG_HAZARD_SPAWN_TIME_OFFSET = 1;
-    //public static inline var TIME_TO_MAX_DIFFICULTY = 30;
-    //public static inline var TIME_TO_MAX_SPEED = 30;
-    //public static inline var BIG_HAZARD_SPAWN_TIME_OFFSET = 5;
+
+    public static inline var TIME_TO_MAX_DIFFICULTY = 30;
+    public static inline var TIME_TO_MAX_SPEED = 30;
+    public static inline var BIG_HAZARD_SPAWN_TIME_OFFSET = 5;
+
+    //public static inline var TIME_TO_MAX_DIFFICULTY = 4;
+    //public static inline var TIME_TO_MAX_SPEED = 4;
+    //public static inline var BIG_HAZARD_SPAWN_TIME_OFFSET = 3;
 
     public static var totalTime:Float = 0;
     public static var highScore:Float;
@@ -92,6 +95,7 @@ class GameScene extends Scene
 
         bigSpawner = new Alarm(BIG_HAZARD_SPAWN_TIME_OFFSET, function() {
             spawnHazard(true, true);
+            Main.sfx["honk"].play(0.1);
         });
         addTween(bigSpawner);
 
@@ -109,7 +113,7 @@ class GameScene extends Scene
 
     private function spawnHazard(targetPlayer:Bool, isBig:Bool) {
         var direction = HXP.choose("top", "bottom", "left", "right");
-        var offset = isBig ? 20 : 10;
+        var offset = isBig ? 200 : 10;
         if(direction == "top") {
             var hazard:Entity = (
                 isBig
@@ -131,7 +135,7 @@ class GameScene extends Scene
                 : new Hazard(0, 0, new Vector2(0, -1))
             );
             if(targetPlayer) {
-                hazard.moveTo(player.x, HXP.height);
+                hazard.moveTo(player.x, HXP.height + offset);
             }
             else {
                 hazard.moveTo(Random.random * (HXP.width - offset), HXP.height);
@@ -160,7 +164,7 @@ class GameScene extends Scene
                 : new Hazard(0, 0, new Vector2(-1, 0))
             );
             if(targetPlayer) {
-                hazard.moveTo(HXP.width, player.y);
+                hazard.moveTo(HXP.width + offset, player.y);
             }
             else {
                 hazard.moveTo(HXP.width, Random.random * (HXP.height - offset));
@@ -239,7 +243,7 @@ class GameScene extends Scene
             HXP.alarm(2, function() {
                 HXP.tween(
                     scoreDisplay,
-                    {"x": HXP.width - scoreDisplay.textWidth - 10, "y": HXP.height - scoreDisplay.textHeight - 10},
+                    {"x": HXP.width - scoreDisplay.textWidth - 15, "y": HXP.height - scoreDisplay.textHeight - 10},
                     1.9,
                     {ease: Ease.sineInOut}
                 );

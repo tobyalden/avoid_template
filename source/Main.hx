@@ -44,7 +44,11 @@ class Main extends Engine
             "bell" => new Sfx("audio/bell.ogg"),
             "crash" => new Sfx("audio/crash.wav"),
             "screech" => new Sfx("audio/screech.wav"),
-            "bigscreech" => new Sfx("audio/bigscreech.wav")
+            "cone1" => new Sfx("audio/cone1.wav"),
+            "cone2" => new Sfx("audio/cone2.wav"),
+            "cone3" => new Sfx("audio/cone3.wav"),
+            "cone4" => new Sfx("audio/cone4.wav"),
+            "honk" => new Sfx("audio/honk.wav"),
         ];
 
         HXP.scene = new GameScene();

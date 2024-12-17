@@ -32,6 +32,7 @@ class Cone extends Entity
     }
 
     public function knockOver(startingVelocity:Vector2) {
+        Main.sfx['cone${HXP.choose(1, 2, 3, 4)}'].play(0.5);
         velocity = startingVelocity;
         velocity.normalize(INITIAL_SPEED);
         sprite.play("fallen");
