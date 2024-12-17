@@ -13,15 +13,18 @@ import haxepunk.tweens.misc.*;
 import haxepunk.utils.*;
 import openfl.Assets;
 
+// TODO: Big cars knock over cones (switch from tiles to entities), pushing them and crushing them
+
 class GameScene extends Scene
 {
     public static inline var INITIAL_SPAWN_INTERVAL = 0.6;
     public static inline var FINAL_SPAWN_INTERVAL = 0.2;
-    //public static inline var TIME_TO_MAX_DIFFICULTY = 5;
-    //public static inline var TIME_TO_MAX_SPEED = 5;
-    public static inline var TIME_TO_MAX_DIFFICULTY = 30;
-    public static inline var TIME_TO_MAX_SPEED = 30;
-    public static inline var BIG_HAZARD_SPAWN_TIME_OFFSET = 5;
+    public static inline var TIME_TO_MAX_DIFFICULTY = 1;
+    public static inline var TIME_TO_MAX_SPEED = 1;
+    public static inline var BIG_HAZARD_SPAWN_TIME_OFFSET = 1;
+    //public static inline var TIME_TO_MAX_DIFFICULTY = 30;
+    //public static inline var TIME_TO_MAX_SPEED = 30;
+    //public static inline var BIG_HAZARD_SPAWN_TIME_OFFSET = 5;
 
     public static var totalTime:Float = 0;
     public static var highScore:Float;

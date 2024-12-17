@@ -83,7 +83,10 @@ class Player extends Entity
 
         sprite.angle = angle;
 
-        if(collide("hazard", x, y) != null) {
+        if(
+            collide("hazard", x, y) != null
+            || collide("cone", x, y) != null
+        ) {
             die();
         }
 
@@ -108,6 +111,10 @@ class Player extends Entity
                 0,
                 HXP.elapsed * 2
             );
+        }
+
+        if(x < -width || x > HXP.width || y < -height || y > HXP.height) {
+            die();
         }
 
         super.update();

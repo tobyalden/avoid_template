@@ -16,8 +16,9 @@ class Level extends Entity
     public function new(levelName:String) {
         super(0, 0);
         type = "hazard";
+        entities = new Array<Entity>();
         loadLevel(levelName);
-        updateGraphic();
+        //updateGraphic();
         mask = walls;
     }
 
@@ -34,13 +35,15 @@ class Level extends Entity
                 walls = new Grid(levelData.width, levelData.height, layer.gridCellWidth, layer.gridCellHeight);
                 for(tileY in 0...layer.grid2D.length) {
                     for(tileX in 0...layer.grid2D[0].length) {
-                        walls.setTile(tileX, tileY, layer.grid2D[tileY][tileX] == "1");
+                        if(layer.grid2D[tileY][tileX] == "1") {
+                            var cone = new Cone(tileX * 10, tileY * 10);
+                            entities.push(cone);
+                        }
                     }
                 }
             }
             else if(layer.name == "entities") {
                 // Load entities
-                entities = new Array<Entity>();
                 for(entityIndex in 0...layer.entities.length) {
                     var entity = layer.entities[entityIndex];
                     if(entity.name == "player") {
@@ -51,19 +54,19 @@ class Level extends Entity
         }
     }
 
-    public function updateGraphic() {
-        tiles = new Tilemap(
-            'graphics/tiles.png',
-            walls.width, walls.height, walls.tileWidth, walls.tileHeight
-        );
-        for(tileX in 0...walls.columns) {
-            for(tileY in 0...walls.rows) {
-                if(walls.getTile(tileX, tileY)) {
-                    tiles.setTile(tileX, tileY, 0);
-                }
-            }
-        }
-        graphic = tiles;
-    }
+    //public function updateGraphic() {
+        //tiles = new Tilemap(
+            //'graphics/tiles.png',
+            //walls.width, walls.height, walls.tileWidth, walls.tileHeight
+        //);
+        //for(tileX in 0...walls.columns) {
+            //for(tileY in 0...walls.rows) {
+                //if(walls.getTile(tileX, tileY)) {
+                    //tiles.setTile(tileX, tileY, 0);
+                //}
+            //}
+        //}
+        //graphic = tiles;
+    //}
 }
 

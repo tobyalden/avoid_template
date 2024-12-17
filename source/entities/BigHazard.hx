@@ -69,6 +69,13 @@ class BigHazard extends Entity
         if(angle != oldAngle) {
             HXP.scene.add(new Skid(centerX, centerY, angle, 2));
         }
+
+        var cones = [];
+        collideTypesInto(["cone"], x, y, cones);
+        for(cone in cones) {
+            cast(cone, Cone).knockOver(velocity);
+        }
+
         super.update();
     }
 }
