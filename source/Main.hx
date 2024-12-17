@@ -29,6 +29,7 @@ class Main extends Engine
         Key.define("left", [Key.A, Key.LEFT]);
         Key.define("right", [Key.D, Key.RIGHT]);
         Key.define("reset", [Key.A, Key.D, Key.LEFT, Key.RIGHT, Key.SPACE, Key.ENTER]);
+        Key.define("screenshot", [Key.P]);
 
         if(Gamepad.gamepad(0) != null) {
             defineGamepadInputs(Gamepad.gamepad(0));

@@ -39,6 +39,7 @@ class GameScene extends Scene
     private var scoreDisplay:Text;
     private var titleDisplay:Text;
     private var replayPrompt:Text;
+    private var screenshotPrompt:Text;
     private var colorChanger:ColorTween;
     private var canReset:Bool;
     private var spawner:Alarm;
@@ -76,6 +77,10 @@ class GameScene extends Scene
         replayPrompt.y = HXP.height - replayPrompt.textHeight - 10;
         replayPrompt.alpha = 0;
         addGraphic(replayPrompt, -10);
+
+        screenshotPrompt = new Text("PRESS P TO TAKE SCREENSHOT", 0, 25, 540, 0, {align: TextAlignType.CENTER});
+        screenshotPrompt.alpha = 0;
+        addGraphic(screenshotPrompt, -10);
 
         colorChanger = new ColorTween(TweenType.PingPong);
         colorChanger.tween(0.25, 0xFF2000, 0xFFFB6E, Ease.sineInOut);
@@ -174,6 +179,9 @@ class GameScene extends Scene
     }
 
     override public function update() {
+        if(Input.pressed("screenshot")) {
+            screenshotPrompt.visible = false;
+        }
         if(player.isDead) {
             if(Input.pressed("reset") && canReset) {
                 reset();
@@ -243,7 +251,12 @@ class GameScene extends Scene
             HXP.alarm(2, function() {
                 HXP.tween(
                     scoreDisplay,
-                    {"x": HXP.width - scoreDisplay.textWidth - 15, "y": HXP.height - scoreDisplay.textHeight - 10},
+                    {"x": HXP.width - scoreDisplay.textWidth - 46, "y": HXP.height - scoreDisplay.textHeight - 10},
+                    1.9,
+                    {ease: Ease.sineInOut}
+                );
+                HXP.tween(screenshotPrompt,
+                    {"alpha": 1},
                     1.9,
                     {ease: Ease.sineInOut}
                 );
