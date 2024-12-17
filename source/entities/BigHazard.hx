@@ -14,6 +14,7 @@ class BigHazard extends Entity
     public static inline var INITIAL_MAX_SPEED = 150;
     public static inline var ACCEL = 200;
     public static inline var TURN_SPEED = 150 / 1.25;
+    public static inline var TOO_CLOSE_DISTANCE = 100;
 
     private var sprite:Image;
     private var angle:Float;
@@ -44,9 +45,37 @@ class BigHazard extends Entity
             ? altTargetAngle
             : targetAngle
         );
+
+        var avoiding = false;
+
+        if(x < -width || x > HXP.width || y < -height || y > HXP.height) {
+            // Don't avoid other cars while offscreen
+        }
+        else {
+            var otherBigHazards = [];
+            HXP.scene.getClass(BigHazard, otherBigHazards);
+            otherBigHazards.remove(this);
+            for(otherBigHazard in otherBigHazards) {
+                if(distanceFrom(otherBigHazard) < TOO_CLOSE_DISTANCE) {
+                    var awayAngle = MathUtil.angle(
+                        centerX, centerY, otherBigHazard.centerX, otherBigHazard.centerY
+                    );
+                    awayAngle += 90;
+                    angle = MathUtil.approach(
+                        angle, awayAngle, TURN_SPEED * HXP.elapsed
+                    );
+                    avoiding = true;
+                }
+            }
+        }
+
         if(!player.isDead) {
+            var turnSpeed:Float = TURN_SPEED;
+            if(avoiding) {
+                turnSpeed *= 0.5;
+            }
             angle = MathUtil.approach(
-                angle, angleToUse, TURN_SPEED * HXP.elapsed
+                angle, angleToUse, turnSpeed * HXP.elapsed
             );
         }
 
