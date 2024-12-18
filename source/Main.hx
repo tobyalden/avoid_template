@@ -11,6 +11,8 @@ import scenes.*;
 
 class Main extends Engine
 {
+    // leaving a note for my future self: to fix the screen scaling stuff i had to go into Main.js and comment out the line that says "this.scale = window.devicePixelRatio"
+
     public static inline var SAVE_FILE_NAME = "default";
 
     public static var sfx:Map<String, Sfx> = null;
