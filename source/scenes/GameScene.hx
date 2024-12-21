@@ -18,10 +18,11 @@ import openfl.Assets;
 
 class GameScene extends Scene
 {
-    public static inline var INITIAL_SPAWN_INTERVAL_FLOOR = 0.5;
+    public static inline var INITIAL_SPAWN_INTERVAL_FLOOR = 0.6;
     public static inline var FINAL_SPAWN_INTERVAL_FLOOR = 0.2;
-    public static inline var INITIAL_SPAWN_INTERVAL_CEILING = 0.2;
+    public static inline var INITIAL_SPAWN_INTERVAL_CEILING = 0.25;
     public static inline var FINAL_SPAWN_INTERVAL_CEILING = 0.1;
+    public static inline var RANK_INCREASE_INCREMENT = 0.025;
 
     public static inline var TIME_TO_MAX_DIFFICULTY = 30;
     public static inline var TIME_TO_MAX_SPEED = 30;
@@ -100,19 +101,21 @@ class GameScene extends Scene
         spawner = new Alarm(INITIAL_SPAWN_INTERVAL_FLOOR, function() {
             spawnHazard(HXP.choose(false, false, false, true), false);
             var spawnIntervalFloor = Math.max(
-                INITIAL_SPAWN_INTERVAL_FLOOR - rank * 0.05,
+                INITIAL_SPAWN_INTERVAL_FLOOR - rank * RANK_INCREASE_INCREMENT,
                 FINAL_SPAWN_INTERVAL_FLOOR
             );
             var spawnIntervalCeiling = Math.max(
-                INITIAL_SPAWN_INTERVAL_CEILING - rank * 0.05,
+                INITIAL_SPAWN_INTERVAL_CEILING - rank * RANK_INCREASE_INCREMENT,
                 FINAL_SPAWN_INTERVAL_CEILING
             );
             //trace('reset with spawnIntervalFloor: ${spawnIntervalFloor} and spawnIntervalCeiling: ${spawnIntervalCeiling}');
+            var easedDifficultyIncreaserPercent = MathUtil.clamp(Ease.circOut(difficultyIncreaser.percent), 0, 1);
             var resetTo = MathUtil.lerp(
                 spawnIntervalFloor,
                 spawnIntervalCeiling,
-                difficultyIncreaser.percent
+                easedDifficultyIncreaserPercent
             );
+            //trace(easedDifficultyIncreaserPercent);
             spawner.reset(resetTo);
         }, TweenType.Looping);
         addTween(spawner);
