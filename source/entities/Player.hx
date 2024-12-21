@@ -96,7 +96,7 @@ class Player extends Entity
                 0.25,
                 HXP.elapsed * 1.5
             );
-            HXP.scene.add(new Skid(centerX, centerY, angle, 1));
+            HXP.scene.add(new Skid(centerX, centerY, angle, 1, 30));
             //var dustVelocity = velocity.clone();
             //dustVelocity.scale(0.0009);
             //dustVelocity.inverse();

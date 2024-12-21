@@ -9,12 +9,12 @@ import scenes.*;
 
 class Skid extends Entity
 {
-    public static inline var FADE_TIME = 20;
-
     public var sprite:Image;
     private var fader:VarTween;
 
-    public function new(x:Float, y:Float, angle:Float, scale:Float) {
+    public function new(
+        x:Float, y:Float, angle:Float, scale:Float, fadeTime:Float
+    ) {
         super(x, y);
         sprite = new Image("graphics/skid.png");
         sprite.centerOrigin();
@@ -24,10 +24,10 @@ class Skid extends Entity
         layer = 10;
         fader = new VarTween();
         addTween(fader);
-        //fader.onComplete.bind(function() {
-            //HXP.scene.remove(this);
-        //});
-        fader.tween(sprite, "alpha", 0.25, FADE_TIME);
+        fader.onComplete.bind(function() {
+            HXP.scene.remove(this);
+        });
+        fader.tween(sprite, "alpha", 0, fadeTime);
     }
 
     override public function update() {

@@ -96,7 +96,7 @@ class BigHazard extends Entity
         sprite.angle = angle;
 
         if(angle != oldAngle) {
-            HXP.scene.add(new Skid(centerX, centerY, angle, 2));
+            HXP.scene.add(new Skid(centerX, centerY, angle, 2, 10));
         }
 
         var cones = [];
