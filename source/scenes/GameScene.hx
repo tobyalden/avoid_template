@@ -18,8 +18,10 @@ import openfl.Assets;
 
 class GameScene extends Scene
 {
-    public static inline var INITIAL_SPAWN_INTERVAL = 0.6;
-    public static inline var FINAL_SPAWN_INTERVAL = 0.2;
+    public static inline var INITIAL_SPAWN_INTERVAL_FLOOR = 0.5;
+    public static inline var FINAL_SPAWN_INTERVAL_FLOOR = 0.2;
+    public static inline var INITIAL_SPAWN_INTERVAL_CEILING = 0.2;
+    public static inline var FINAL_SPAWN_INTERVAL_CEILING = 0.1;
 
     public static inline var TIME_TO_MAX_DIFFICULTY = 30;
     public static inline var TIME_TO_MAX_SPEED = 30;
@@ -48,6 +50,8 @@ class GameScene extends Scene
 
     private var canTakeScreenshot:Bool;
 
+    private var rank:Int;
+
     override public function begin() {
         Data.load(Main.SAVE_FILE_NAME);
         totalTime = 0;
@@ -59,6 +63,8 @@ class GameScene extends Scene
         addGraphic(new Image("graphics/background.png"), 100);
 
         canTakeScreenshot = false;
+
+        rank = 0;
 
         level = add(new Level("level"));
         for(entity in level.entities) {
@@ -91,11 +97,20 @@ class GameScene extends Scene
         addTween(colorChanger, true);
 
         canReset = false;
-        spawner = new Alarm(INITIAL_SPAWN_INTERVAL, function() {
+        spawner = new Alarm(INITIAL_SPAWN_INTERVAL_FLOOR, function() {
             spawnHazard(HXP.choose(false, false, false, true), false);
+            var spawnIntervalFloor = Math.max(
+                INITIAL_SPAWN_INTERVAL_FLOOR - rank * 0.05,
+                FINAL_SPAWN_INTERVAL_FLOOR
+            );
+            var spawnIntervalCeiling = Math.max(
+                INITIAL_SPAWN_INTERVAL_CEILING - rank * 0.05,
+                FINAL_SPAWN_INTERVAL_CEILING
+            );
+            //trace('reset with spawnIntervalFloor: ${spawnIntervalFloor} and spawnIntervalCeiling: ${spawnIntervalCeiling}');
             var resetTo = MathUtil.lerp(
-                INITIAL_SPAWN_INTERVAL,
-                FINAL_SPAWN_INTERVAL,
+                spawnIntervalFloor,
+                spawnIntervalCeiling,
                 difficultyIncreaser.percent
             );
             spawner.reset(resetTo);
@@ -113,6 +128,7 @@ class GameScene extends Scene
         );
         difficultyIncreaser.onComplete.bind(function() {
             bigSpawner.start();
+            rank += 1;
         });
         addTween(difficultyIncreaser);
 
