@@ -28,10 +28,6 @@ class GameScene extends Scene
     public static inline var TIME_TO_MAX_SPEED = 30;
     public static inline var BIG_HAZARD_SPAWN_TIME_OFFSET = 5;
 
-    //public static inline var TIME_TO_MAX_DIFFICULTY = 4;
-    //public static inline var TIME_TO_MAX_SPEED = 4;
-    //public static inline var BIG_HAZARD_SPAWN_TIME_OFFSET = 3;
-
     public static var totalTime:Float = 0;
     public static var highScore:Float;
 
@@ -42,14 +38,11 @@ class GameScene extends Scene
     private var scoreDisplay:Text;
     private var titleDisplay:Text;
     private var replayPrompt:Text;
-    private var screenshotPrompt:Text;
     private var colorChanger:ColorTween;
     private var canReset:Bool;
     private var spawner:Alarm;
     private var bigSpawner:Alarm;
     private var level:Level;
-
-    private var canTakeScreenshot:Bool;
 
     private var rank:Int;
 
@@ -62,8 +55,6 @@ class GameScene extends Scene
         curtain.fadeOut(0.25);
 
         addGraphic(new Image("graphics/background.png"), 100);
-
-        canTakeScreenshot = false;
 
         rank = 0;
 
@@ -89,10 +80,6 @@ class GameScene extends Scene
         replayPrompt.alpha = 0;
         addGraphic(replayPrompt, -10);
 
-        screenshotPrompt = new Text("PRESS P TO TAKE SCREENSHOT", 0, 25, 540, 0, {align: TextAlignType.CENTER});
-        screenshotPrompt.alpha = 0;
-        addGraphic(screenshotPrompt, -10);
-
         colorChanger = new ColorTween(TweenType.PingPong);
         colorChanger.tween(0.25, 0xFF2000, 0xFFFB6E, Ease.sineInOut);
         addTween(colorChanger, true);
@@ -108,14 +95,12 @@ class GameScene extends Scene
                 INITIAL_SPAWN_INTERVAL_CEILING - rank * RANK_INCREASE_INCREMENT,
                 FINAL_SPAWN_INTERVAL_CEILING
             );
-            //trace('reset with spawnIntervalFloor: ${spawnIntervalFloor} and spawnIntervalCeiling: ${spawnIntervalCeiling}');
             var easedDifficultyIncreaserPercent = MathUtil.clamp(Ease.circOut(difficultyIncreaser.percent), 0, 1);
             var resetTo = MathUtil.lerp(
                 spawnIntervalFloor,
                 spawnIntervalCeiling,
                 easedDifficultyIncreaserPercent
             );
-            //trace(easedDifficultyIncreaserPercent);
             spawner.reset(resetTo);
         }, TweenType.Looping);
         addTween(spawner);
@@ -202,10 +187,6 @@ class GameScene extends Scene
     }
 
     override public function update() {
-        if(Input.pressed("screenshot") && canTakeScreenshot) {
-            screenshotPrompt.visible = false;
-            Main.sfx["camera"].play(0.5);
-        }
         if(player.isDead) {
             if(Input.pressed("reset") && canReset) {
                 reset();
@@ -279,10 +260,6 @@ class GameScene extends Scene
                     1,
                     {ease: Ease.sineInOut}
                 );
-                HXP.alarm(1, function() {
-                    screenshotPrompt.alpha = 1;
-                    canTakeScreenshot = true;
-                });
             });
         }});
         if(totalTime > highScore) {
