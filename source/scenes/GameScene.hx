@@ -18,6 +18,9 @@ import openfl.Assets;
 
 class GameScene extends Scene
 {
+    public static inline var GAME_WIDTH = 540;
+    public static inline var GAME_HEIGHT = 540;
+
     public static inline var INITIAL_SPAWN_INTERVAL_FLOOR = 0.6;
     public static inline var FINAL_SPAWN_INTERVAL_FLOOR = 0.2;
     public static inline var INITIAL_SPAWN_INTERVAL_CEILING = 0.25;
@@ -43,6 +46,10 @@ class GameScene extends Scene
     private var spawner:Alarm;
     private var bigSpawner:Alarm;
     private var level:Level;
+
+    private var divider:Image;
+    private var arrowLeft:Image;
+    private var arrowRight:Image;
 
     private var rank:Int;
 
@@ -76,7 +83,7 @@ class GameScene extends Scene
 
         replayPrompt = new Text("NEW RECORD");
         replayPrompt.x = 10;
-        replayPrompt.y = HXP.height - replayPrompt.textHeight - 10;
+        replayPrompt.y = GAME_HEIGHT - replayPrompt.textHeight - 10;
         replayPrompt.alpha = 0;
         addGraphic(replayPrompt, -10);
 
@@ -122,6 +129,30 @@ class GameScene extends Scene
 
         speedIncreaser = new Alarm(TIME_TO_MAX_SPEED);
         addTween(speedIncreaser);
+
+        divider = Image.createRect(1, 10000, 0xFFFFFF);
+        divider.scrollX = 0;
+        divider.scrollY = 0;
+        divider.y = GAME_HEIGHT;
+        divider.x = GAME_WIDTH / 2;
+        divider.alpha = 0.2;
+        addGraphic(divider, -99999);
+
+        arrowLeft = new Image("graphics/arrow_left.png");
+        arrowLeft.scrollX = 0;
+        arrowLeft.scrollY = 0;
+        arrowLeft.x = GAME_WIDTH / 4 - arrowLeft.width / 2;
+        arrowLeft.y = GAME_HEIGHT + (HXP.height - GAME_HEIGHT) / 2 - arrowLeft.height / 2;
+        arrowLeft.alpha = 0.2;
+        addGraphic(arrowLeft, -99999);
+
+        arrowRight = new Image("graphics/arrow_right.png");
+        arrowRight.scrollX = 0;
+        arrowRight.scrollY = 0;
+        arrowRight.x = GAME_WIDTH / 4 * 3 - arrowRight.width / 2;
+        arrowRight.y = GAME_HEIGHT + (HXP.height - GAME_HEIGHT) / 2 - arrowRight.height / 2;
+        arrowRight.alpha = 0.2;
+        addGraphic(arrowRight, -99999);
     }
 
     private function spawnHazard(targetPlayer:Bool, isBig:Bool) {
@@ -137,7 +168,7 @@ class GameScene extends Scene
                 hazard.moveTo(player.x, -offset);
             }
             else {
-                hazard.moveTo(Random.random * (HXP.width - offset), -offset);
+                hazard.moveTo(Random.random * (GAME_WIDTH - offset), -offset);
             }
             add(hazard);
         }
@@ -148,10 +179,10 @@ class GameScene extends Scene
                 : new Hazard(0, 0, new Vector2(0, -1))
             );
             if(targetPlayer) {
-                hazard.moveTo(player.x, HXP.height + offset);
+                hazard.moveTo(player.x, GAME_HEIGHT + offset);
             }
             else {
-                hazard.moveTo(Random.random * (HXP.width - offset), HXP.height);
+                hazard.moveTo(Random.random * (GAME_WIDTH - offset), GAME_HEIGHT);
             }
             add(hazard);
         }
@@ -166,7 +197,7 @@ class GameScene extends Scene
                 hazard.moveTo(-offset, player.y);
             }
             else {
-                hazard.moveTo(-offset, Random.random * (HXP.height - offset));
+                hazard.moveTo(-offset, Random.random * (GAME_HEIGHT - offset));
             }
             add(hazard);
         }
@@ -177,10 +208,10 @@ class GameScene extends Scene
                 : new Hazard(0, 0, new Vector2(-1, 0))
             );
             if(targetPlayer) {
-                hazard.moveTo(HXP.width + offset, player.y);
+                hazard.moveTo(GAME_WIDTH, player.y);
             }
             else {
-                hazard.moveTo(HXP.width, Random.random * (HXP.height - offset));
+                hazard.moveTo(GAME_WIDTH, Random.random * (GAME_HEIGHT - offset));
             }
             add(hazard);
         }
@@ -188,7 +219,8 @@ class GameScene extends Scene
 
     override public function update() {
         if(player.isDead) {
-            if(Input.pressed("reset") && canReset) {
+            var tapped = Lambda.count(Touch.touches) > 0;
+            if(tapped && canReset) {
                 reset();
             }
             if(totalTime > highScore) {
@@ -207,7 +239,7 @@ class GameScene extends Scene
                 Main.sfx["bell"].play(0.75);
             }
             scoreDisplay.text = '${timeRound(totalTime, 0)}';
-            scoreDisplay.x = HXP.width / 2 - scoreDisplay.textWidth / 2;
+            scoreDisplay.x = GAME_WIDTH / 2 - scoreDisplay.textWidth / 2;
         }
 
         super.update();
@@ -233,7 +265,7 @@ class GameScene extends Scene
 
     public function onDeath() {
         stopTweens();
-        HXP.tween(scoreDisplay, {"y": HXP.height / 2 - scoreDisplay.height / 2, "alpha": 1}, 1.5, {ease: Ease.sineInOut, complete: function() {
+        HXP.tween(scoreDisplay, {"y": GAME_HEIGHT / 2 - scoreDisplay.height / 2, "alpha": 1}, 1.5, {ease: Ease.sineInOut, complete: function() {
             scoreDisplay.text = '${timeRound(totalTime, 2)} SECONDS';
             if(totalTime > highScore) {
                 replayPrompt.alpha = 1;
@@ -256,7 +288,7 @@ class GameScene extends Scene
             HXP.alarm(1, function() {
                 HXP.tween(
                     scoreDisplay,
-                    {"x": HXP.width - scoreDisplay.textWidth - 46, "y": HXP.height - scoreDisplay.textHeight - 10},
+                    {"x": GAME_WIDTH - scoreDisplay.textWidth - 46, "y": GAME_HEIGHT - scoreDisplay.textHeight - 10},
                     1,
                     {ease: Ease.sineInOut}
                 );

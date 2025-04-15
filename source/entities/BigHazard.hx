@@ -48,7 +48,7 @@ class BigHazard extends Entity
 
         var avoiding = false;
 
-        if(x < -width || x > HXP.width || y < -height || y > HXP.height) {
+        if(x < -width || x > GameScene.GAME_WIDTH || y < -height || y > GameScene.GAME_HEIGHT) {
             // Don't avoid other cars while offscreen
         }
         else {

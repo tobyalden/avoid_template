@@ -1,21 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <project>
-	<meta title="haxepunk_template" package="com.example.app" version="1.0.0" company=""/>
+	<meta title="CAR ARTIST" package="com.example.app" version="1.0.0" company=""/>
 	<app file="Main" main="Main" path="export"/>
-    <icon path="HaxePunk-icon.svg"/>
-
-    <!--<window width="360" height="360"/>-->
-    <window width="540" height="540"/>
-	<window fps="60" background="0x000000"/>
-    <window resizable="true" unless="mobile" background="0x000000"/>
-	<window orientation="landscape" vsync="true" antialiasing="0" if="cpp"/>
-
+	<icon path="HaxePunk-icon.png"/>
+	<window if="mobile" orientation="portrait" fullscreen="true" width="0" height="0" resizable="true" background="#000000" />
 	<source path="source"/>
-
 	<haxelib name="HaxePunk"/>
-
 	<haxedef name="hxp_debug" unless="release" />
-
 	<assets path="assets/graphics" rename="graphics" include="*.png|*.jpg"/>
 	<assets path="assets/audio" rename="audio" include="*.wav|*.ogg"/>
 	<assets path="assets/font" rename="font" include="*.ttf"/>

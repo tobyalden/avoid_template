@@ -42,7 +42,8 @@ class Player extends Entity
             return;
         }
 
-        if(Input.pressed("reset")) {
+        var tapped = Lambda.count(Touch.touches) > 0;
+        if(tapped) {
             if(!hasMoved) {
                 cast(HXP.scene, GameScene).onStart();
                 Main.sfx["screech"].loop(0);
@@ -54,11 +55,22 @@ class Player extends Entity
             return;
         }
 
+        var touchingLeft = false;
+        var touchingRight = false;
+        for(touch in Touch.touches) {
+            if(touch.x < GameScene.GAME_WIDTH / 2) {
+                touchingLeft = true;
+            }
+            if(touch.x > GameScene.GAME_WIDTH / 2) {
+                touchingRight = true;
+            }
+        }
+
         var oldAngle = angle;
-        if(Input.check("left")) {
+        if(touchingLeft) {
             angle += TURN_SPEED * HXP.elapsed;
         }
-        if(Input.check("right")) {
+        if(touchingRight) {
             angle -= TURN_SPEED * HXP.elapsed;
         }
 
@@ -113,7 +125,7 @@ class Player extends Entity
             );
         }
 
-        if(x < -width || x > HXP.width || y < -height || y > HXP.height) {
+        if(x < -width || x > GameScene.GAME_WIDTH || y < -height || y > GameScene.GAME_HEIGHT) {
             die();
         }
 
